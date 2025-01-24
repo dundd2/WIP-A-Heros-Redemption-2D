@@ -13,8 +13,8 @@ local story = {
           menu_options_desc = "Adjust game settings",
           menu_exit = "Exit",
           menu_exit_desc = "Quit the game",
-          menu_story_page = "Story Page", 
-          menu_story_page_desc = "Read the game's story", 
+          menu_story_page = "Story Page",
+          menu_story_page_desc = "Read the game's story",
 
           level_select_title = "Select Level",
           level_number = "Level %{level}",
@@ -38,6 +38,8 @@ local story = {
           options_back_to_menu = "Back to Main Menu",
           options_on = "ON",
           options_off = "OFF",
+          options_resolution = "Resolution", -- New option
+          options_resolution_desc = "Set game screen resolution", -- Description for resolution option
 
           battle_victory = "Victory!",
           battle_defeat = "Defeat!",
@@ -147,6 +149,8 @@ local story = {
           options_back_to_menu = "返回主選單",
           options_on = "開",
           options_off = "關",
+          options_resolution = "解析度", -- New option (Chinese)
+          options_resolution_desc = "設定遊戲螢幕解析度", -- Description for resolution option (Chinese)
 
           battle_victory = "勝利！",
           battle_defeat = "失敗！",
@@ -682,6 +686,15 @@ local audioState = {
 screenWidth = 1880
 screenHeight = 720
 
+-- Available resolutions in 16:9 aspect ratio
+local availableResolutions = {
+    {width = 1920, height = 1080, name = "1920x1080 (Full HD)"},
+    {width = 1280, height = 720, name = "1280x720 (HD)"},
+    {width = 854, height = 480, name = "854x480 (SD)"},
+    {width = 640, height = 360, name = "640x360 (Low)"}
+}
+local currentResolutionIndex = 1 -- Default resolution index
+
 -- Add this near the other state declarations (after gameState declaration)
 resultState = {
   currentOption = 1,
@@ -690,7 +703,6 @@ resultState = {
     {textKey = "result_main_menu", action = function() gameState = "menu" end}
   },
   buttonAreas = {}, -- Add buttonAreas for mouse interaction
-  currentOption = 1,
   navDelay = 0.3, -- 調整結果介面選項卡速度 (原本 0.2 改為 0.3)
 }
 
@@ -707,15 +719,23 @@ storyPageState = {
 
 function love.load()
   print("[GAME] love.load() - Game loading started")
+
+  -- Load saved resolution settings (if you implement saving)
+  -- For now, default resolution is used.
+
+  -- Set initial screen resolution
+  screenWidth = availableResolutions[currentResolutionIndex].width
+  screenHeight = availableResolutions[currentResolutionIndex].height
+  love.window.setMode(screenWidth, screenHeight, {resizable = false, vsync = true})
+  print("[GAME] Set window mode to " .. screenWidth .. "x" .. screenHeight)
+
   -- Add camera
   camera = {
       x = 0,
       y = 0,
       scale = 1
   }
--- Game resolution
-love.window.setMode(screenWidth, screenHeight)
-print("[GAME] Set window mode to " .. screenWidth .. "x" .. screenHeight)
+
 -- Add timer system
 timers = {}
 print("[GAME] Timer system initialized")
@@ -1172,6 +1192,7 @@ print("[GAME] Battle state initialized")
   optionsState = {
     options = {
       {textKey = "options_language", type = "language", currentOption = 1, languageOptions = {"en", "zh"}},
+      {textKey = "options_resolution", type = "resolution", currentOption = currentResolutionIndex, resolutionOptions = availableResolutions}, -- Resolution option
       {textKey = "options_bgm", type = "toggle", state = "isMutedBGM"},
       {textKey = "options_sfx", type = "toggle", state = "isMutedSFX"},
       {textKey = "options_cheat", type = "toggle", state = "isCheatMode", targetState = player},
@@ -1182,7 +1203,8 @@ print("[GAME] Battle state initialized")
     navDelay = 0.3, -- 調整選項介面選項卡速度 (原本 0.2 改為 0.3)
     buttonAreas = {}, -- Add buttonAreas for mouse interaction
     backButtonArea = {}, -- Add backButtonArea for mouse interaction
-    languageButtonAreas = {} -- Add languageButtonAreas for mouse interaction
+    languageButtonAreas = {} ,-- Add languageButtonAreas for mouse interaction
+    resolutionButtonAreas = {} -- Add resolutionButtonAreas for mouse interaction
   }
   print("[GAME] Options state initialized")
 
@@ -1355,7 +1377,7 @@ function love.draw()
   elseif gameState == "options" then
     drawOptionsUI()
   elseif gameState == "storyPage" then -- 新增 storyPage 的繪製
-    drawStoryPageUI()
+    drawStoryPageUI(dt) -- Pass dt here
   end
 
   love.graphics.pop()
@@ -1401,6 +1423,7 @@ function drawMainMenu()
 
     if i == menuState.currentOption then
       love.graphics.setColor(1, 1, 0)
+      love.graphics.rectangle("line", buttonRect.x, buttonRect.y, buttonRect.width, buttonRect.height) -- Yellow outline
     else
       love.graphics.setColor(1, 1, 1)
     end
@@ -1450,6 +1473,7 @@ function drawLevelSelect()
 
       if i == menuState.levelSelect.currentLevel then
           love.graphics.setColor(1, 1, 0)
+          love.graphics.rectangle("line", buttonRect.x, buttonRect.y, buttonRect.width, buttonRect.height) -- Yellow outline
       else
           love.graphics.setColor(1, 1, 1)
       end
@@ -1586,7 +1610,7 @@ function drawStoryDialogue()
 end
 
 -- 新增 drawStoryPageUI 函數
-function drawStoryPageUI()
+function drawStoryPageUI(dt) -- Receive dt here
   storyPageState.navTimer = storyPageState.navTimer + dt -- 確保在 drawStoryPageUI 函數中更新 navTimer (原本沒有)
 
   local windowWidth = love.graphics.getWidth()
@@ -1807,6 +1831,7 @@ function drawBattleUI()
 
       if i == battleState.currentOption then
         love.graphics.setColor(1, 1, 0)
+        love.graphics.rectangle("line", buttonRect.x, buttonRect.y, buttonRect.width, buttonRect.height) -- Yellow outline
       else
         love.graphics.setColor(1, 1, 1)
       end
@@ -2161,6 +2186,13 @@ function handleOptionsInput(dt)
       currentGameLanguage = currentOption.languageOptions[currentOption.currentOption]
       story:setCurrentLanguage(currentGameLanguage)
       print("[OPTIONS MENU] Language changed to: " .. currentGameLanguage)
+    elseif currentOption.type == "resolution" then -- Resolution change
+      currentOption.currentOption = currentOption.currentOption - 1
+      if currentOption.currentOption < 1 then
+        currentOption.currentOption = #currentOption.resolutionOptions
+      end
+      currentResolutionIndex = currentOption.currentOption
+      applyResolutionChange() -- Apply resolution change
     end
     moved = true
   elseif love.keyboard.isDown("right") or love.keyboard.isDown("d") then
@@ -2173,6 +2205,13 @@ function handleOptionsInput(dt)
       currentGameLanguage = currentOption.languageOptions[currentOption.currentOption]
       story:setCurrentLanguage(currentGameLanguage)
       print("[OPTIONS MENU] Language changed to: " .. currentGameLanguage)
+    elseif currentOption.type == "resolution" then -- Resolution change
+      currentOption.currentOption = currentOption.currentOption + 1
+      if currentOption.currentOption > #currentOption.resolutionOptions then
+        currentOption.currentOption = #currentOption.resolutionOptions
+      end
+      currentResolutionIndex = currentOption.currentOption
+      applyResolutionChange() -- Apply resolution change
     end
     moved = true
   end
@@ -2225,6 +2264,38 @@ function handleOptionsInput(dt)
     end
   end
   handleMenuInput(dt)  -- 選項介面也套用主選單的速度調整
+end
+
+-- Function to apply resolution change
+function applyResolutionChange()
+  screenWidth = availableResolutions[currentResolutionIndex].width
+  screenHeight = availableResolutions[currentResolutionIndex].height
+  love.window.setMode(screenWidth, screenHeight, {resizable = false, vsync = true})
+  print("[GAME] Resolution changed to " .. screenWidth .. "x" .. screenHeight)
+
+    -- Update positions based on new resolution
+    positions.player = {
+        x = screenWidth * 0.15,
+        y = screenHeight * 0.5,
+        scale = 0.7,
+        maxWidth = screenWidth * 0.4
+    }
+    positions.enemy = {
+        x = screenWidth * 0.55,
+        y = screenHeight * 0.5,
+        scale = 0.7,
+        maxWidth = screenWidth * 0.4
+    }
+    positions.enemyHP = {x = screenWidth - 220, y = 20}
+    positions.playerUI = {x = screenWidth * 0.05 - 50, y = screenHeight * 0.78}
+    positions.enemyUI = {x = screenWidth * 0.65, y = screenHeight * 0.75}
+
+    animations.player.x = positions.player.x
+    animations.player.y = positions.player.y
+    animations.player.originalX = positions.player.x
+    animations.enemy.x = positions.enemy.x
+    animations.enemy.y = positions.enemy.y
+    animations.enemy.originalX = positions.enemy.x
 end
 
 
@@ -2298,7 +2369,7 @@ function love.keypressed(key)
           pauseState.currentOption = #pauseState.options
         end
         if pauseState.currentOption ~= prevPauseOption then
-          print("[PAUSE MENU] Navigated menu: Up, selected option index: " .. pauseState.currentOption .. ", option text: " .. story:getText(currentGameLanguage, pauseState.options[pauseState.options.currentOption].textKey))
+          print("[PAUSE MENU] Navigated menu: Up, selected option index: " .. pauseState.currentOption .. ", option text: " .. story:getText(currentGameLanguage, pauseState.options[pauseState.currentOption].textKey))
         end
       elseif key == "down" or key == "s" then
         local prevPauseOption = pauseState.currentOption
@@ -2307,7 +2378,7 @@ function love.keypressed(key)
           pauseState.currentOption = 1
         end
         if pauseState.currentOption ~= prevPauseOption then
-          print("[PAUSE MENU] Navigated menu: Down, selected option index: " .. pauseState.currentOption .. ", option text: " .. story:getText(currentGameLanguage, pauseState.options[pauseState.options.currentOption].textKey))
+          print("[PAUSE MENU] Navigated menu: Down, selected option index: " .. pauseState.currentOption .. ", option text: " .. story:getText(currentGameLanguage, pauseState.options[pauseState.currentOption].textKey))
         end
       elseif key == "return" or key == "space" then
         -- Execute the selected option's action
@@ -2483,7 +2554,7 @@ function love.mousepressed(x, y, button, istouch, presses)
     -- Back button click detection in Level Select
     if menuState.levelSelect.backButtonArea then
       local backButtonRect = menuState.levelSelect.backButtonArea
-      if x > backButtonRect.x and x < backButtonRect.x + backButtonRect.width and y > backButtonRect.y and y < backButtonRect.y + backButtonRect.height then
+      if x > backButtonRect.x and x < backButtonRect.x + backButtonRect.width and y > buttonRect.y and y < backButtonRect.y + backButtonRect.height then
         gameState = "menu"
         print("[LEVEL SELECT] Back button clicked, returning to main menu")
       end
@@ -2578,6 +2649,33 @@ elseif gameState == "options" then
       end
     end
   end
+    -- Resolution option click handling
+    if optionsState.options[optionsState.currentOption].type == "resolution" and optionsState.resolutionButtonAreas then
+        for areaType, areaRect in pairs(optionsState.resolutionButtonAreas) do
+            if x > areaRect.x and x < areaRect.x + areaRect.width and y > areaRect.y and y < areaRect.y + areaRect.height then
+                if areaType == "left" then
+                    local currentOption = optionsState.options[optionsState.currentOption]
+                    currentOption.currentOption = currentOption.currentOption - 1
+                    if currentOption.currentOption < 1 then
+                        currentOption.currentOption = #currentOption.resolutionOptions
+                    end
+                    currentResolutionIndex = currentOption.currentOption
+                    applyResolutionChange()
+                    print("[OPTIONS MENU] Resolution changed (Left Arrow Click)")
+                elseif areaType == "right" then
+                    local currentOption = optionsState.options[optionsState.currentOption]
+                    currentOption.currentOption = currentOption.currentOption + 1
+                    if currentOption.currentOption > #currentOption.resolutionOptions then
+                        currentOption.currentOption = #currentOption.resolutionOptions
+                    end
+                     currentResolutionIndex = currentOption.currentOption
+                     applyResolutionChange()
+                     print("[OPTIONS MENU] Resolution changed (Right Arrow Click)")
+                end
+                break -- Exit loop after click is handled
+            end
+        end
+    end
   -- Back button click detection in Options
   if optionsState.backButtonArea then
     local backButtonRect = optionsState.backButtonArea
@@ -3060,6 +3158,7 @@ for i, option in ipairs(pauseState.options) do
     -- Highlight selected option
     if i == pauseState.currentOption then
         love.graphics.setColor(1, 1, 0)
+        love.graphics.rectangle("line", buttonRect.x, buttonRect.y, buttonRect.width, buttonRect.height) -- Yellow outline
     else
         love.graphics.setColor(1, 1, 1)
     end
@@ -3107,8 +3206,13 @@ function drawVictoryUI()
         textKey = "result_restart"
     }
     resultState.buttonAreas[1] = restartButton
-    love.graphics.setColor(1, 1, 1)
-    love.graphics.rectangle("line", restartButton.x, restartButton.y, restartButton.width, restartButton.height)
+    if resultState.currentOption == 1 then
+        love.graphics.setColor(1, 1, 0) -- Yellow outline if selected
+        love.graphics.rectangle("line", restartButton.x, restartButton.y, restartButton.width, restartButton.height)
+    else
+        love.graphics.setColor(1, 1, 1)
+        love.graphics.rectangle("line", restartButton.x, restartButton.y, restartButton.width, restartButton.height)
+    end
     local fontUIVictory = resources.fonts.ui
     if currentGameLanguage == "zh" then
         fontUIVictory = resources.fonts.chineseUI
@@ -3126,8 +3230,13 @@ function drawVictoryUI()
         textKey = "result_main_menu"
     }
     resultState.buttonAreas[2] = mainMenuButton
-    love.graphics.setColor(1, 1, 1)
-    love.graphics.rectangle("line", mainMenuButton.x, mainMenuButton.y, mainMenuButton.width, mainMenuButton.height)
+    if resultState.currentOption == 2 then
+        love.graphics.setColor(1, 1, 0) -- Yellow outline if selected
+        love.graphics.rectangle("line", mainMenuButton.x, mainMenuButton.y, mainMenuButton.width, mainMenuButton.height)
+    else
+        love.graphics.setColor(1, 1, 1)
+        love.graphics.rectangle("line", mainMenuButton.x, mainMenuButton.y, mainMenuButton.width, mainMenuButton.height)
+    end
     love.graphics.setFont(fontUIVictory)
     local mainMenuTextWidth = fontUIVictory:getWidth(story:getText(currentGameLanguage, mainMenuButton.textKey))
     love.graphics.print(story:getText(currentGameLanguage, mainMenuButton.textKey), mainMenuButton.x + mainMenuButton.width / 2 - mainMenuTextWidth / 2 , mainMenuButton.y + mainMenuButton.height / 2 - 10)
@@ -3168,8 +3277,13 @@ local restartButton = {
    textKey = "result_restart"
  }
  resultState.buttonAreas[1] = restartButton
- love.graphics.setColor(1, 1, 1)
- love.graphics.rectangle("line", restartButton.x, restartButton.y, restartButton.width, restartButton.height)
+ if resultState.currentOption == 1 then
+    love.graphics.setColor(1, 1, 0) -- Yellow outline if selected
+    love.graphics.rectangle("line", restartButton.x, restartButton.y, restartButton.width, restartButton.height)
+ else
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.rectangle("line", restartButton.x, restartButton.y, restartButton.width, restartButton.height)
+ end
  local fontUIDefeat = resources.fonts.ui
     if currentGameLanguage == "zh" then
         fontUIDefeat = resources.fonts.chineseUI
@@ -3186,8 +3300,13 @@ local restartButton = {
    textKey = "result_main_menu"
  }
  resultState.buttonAreas[2] = mainMenuButton
- love.graphics.setColor(1, 1, 1)
- love.graphics.rectangle("line", mainMenuButton.x, mainMenuButton.y, mainMenuButton.width, mainMenuButton.height)
+ if resultState.currentOption == 2 then
+    love.graphics.setColor(1, 1, 0) -- Yellow outline if selected
+    love.graphics.rectangle("line", mainMenuButton.x, mainMenuButton.y, mainMenuButton.width, mainMenuButton.height)
+ else
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.rectangle("line", mainMenuButton.x, mainMenuButton.y, mainMenuButton.width, mainMenuButton.height)
+ end
  local mainMenuTextWidth = fontUIDefeat:getWidth(story:getText(currentGameLanguage, mainMenuButton.textKey))
  love.graphics.print(story:getText(currentGameLanguage, mainMenuButton.textKey), mainMenuButton.x + mainMenuButton.width / 2 - mainMenuTextWidth / 2 , mainMenuButton.y + mainMenuButton.height / 2 - 10)
 end
@@ -3302,19 +3421,21 @@ function drawOptionsUI()
   love.graphics.setFont(fontUIOptions)
   optionsState.buttonAreas = {} -- Store button areas
   optionsState.languageButtonAreas = {} -- Clear previous language button areas
+  optionsState.resolutionButtonAreas = {} -- Clear previous resolution button areas
 
   for i, option in ipairs(optionsState.options) do -- Use ipairs for correct sequential indexing
     local optionY = windowHeight * 0.4 + (i-1) * 50
     local buttonRect = {
-      x = windowWidth / 2 - 100,
+      x = windowWidth / 2 - 150, -- Adjusted X to make space for arrows
       y = optionY,
-      width = 200,
+      width = 300, -- Adjusted width
       height = 40
     }
     optionsState.buttonAreas[i] = buttonRect -- Corrected index here, using 'i'
 
     if i == optionsState.currentOption then
       love.graphics.setColor(1, 1, 0)
+      love.graphics.rectangle("line", buttonRect.x, buttonRect.y, buttonRect.width, buttonRect.height) -- Yellow outline
     else
       love.graphics.setColor(1, 1, 1)
     end
@@ -3343,6 +3464,30 @@ function drawOptionsUI()
       love.graphics.print("<", leftArrowRect.x + 10, leftArrowRect.y + 10)
       love.graphics.rectangle("line", rightArrowRect.x, rightArrowRect.y, rightArrowRect.width, rightArrowRect.height)
       love.graphics.print(">", rightArrowRect.x + 10, rightArrowRect.y + 10)
+
+    elseif option.type == "resolution" then
+        optionText = optionText .. ": " .. option.resolutionOptions[currentResolutionIndex].name
+        -- Create left and right arrow buttons for resolution option
+        local arrowButtonWidth = 30
+        local leftArrowRect = {
+            x = buttonRect.x - arrowButtonWidth - 5,
+            y = buttonRect.y,
+            width = arrowButtonWidth,
+            height = buttonRect.height
+        }
+        local rightArrowRect = {
+            x = buttonRect.x + buttonRect.width + 5,
+            y = buttonRect.y,
+            width = arrowButtonWidth,
+            height = buttonRect.height
+        }
+        optionsState.resolutionButtonAreas["left"] = leftArrowRect
+        optionsState.resolutionButtonAreas["right"] = rightArrowRect
+
+        love.graphics.rectangle("line", leftArrowRect.x, leftArrowRect.y, leftArrowRect.width, leftArrowRect.height)
+        love.graphics.print("<", leftArrowRect.x + 10, leftArrowRect.y + 10)
+        love.graphics.rectangle("line", rightArrowRect.x, rightArrowRect.y, rightArrowRect.width, rightArrowRect.height)
+        love.graphics.print(">", rightArrowRect.x + 10, rightArrowRect.y + 10)
 
     elseif option.type == "toggle" then
       local targetState = option.targetState or audioState

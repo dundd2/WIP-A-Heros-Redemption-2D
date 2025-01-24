@@ -4,7 +4,8 @@ This project utilizes various free resources. We extend our sincere gratitude to
 
 ## Graphics
 
-### Character Sprites
+### Character 
+All background images were generated using Xai Grok 2 AI image generation tool.
 
 ### UI Elements
 
