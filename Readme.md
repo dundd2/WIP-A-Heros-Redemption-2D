@@ -5,8 +5,6 @@ It serves as a personal proof-of-concept and learning exercise to better underst
 
 ## ScreenShot (V0.01)
 ![ScreenShot1](https://github.com/dundd2/A-Heros-Redemption-2D/blob/main/assets/Screenshot/SC(1).gif)
-![ScreenShot1](https://github.com/dundd2/A-Heros-Redemption-2D/blob/main/assets/Screenshot/SC(2).png)
-![ScreenShot1](https://github.com/dundd2/A-Heros-Redemption-2D/blob/main/assets/Screenshot/SC(3).png)
 
 ## Project Overview
 
