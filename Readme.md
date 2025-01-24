@@ -38,7 +38,7 @@ This 2D demo is intentionally simplified and **does not include** features plann
 - **Play Status UI**:Current HP, MP, EXP, LV.  MC’s statistics, 
 - **Quest Page** : Show players’ mission
 
-Despite these simplifications, the 2D game codebase already consists of approximately **3000 lines of code**. This provides a tangible reference point for understanding the scale and complexity even of a reduced-scope game and highlights potential challenges in developing a more feature-rich 3D project within our timeframe.
+Despite these simplifications, the 2D game codebase already consists of approximately **3500+ lines of code**. This provides a tangible reference point for understanding the scale and complexity even of a reduced-scope game and highlights potential challenges in developing a more feature-rich 3D project within our timeframe.
 
 For more detailed features and information about our current (Jan 2025) plans for the 3D project, please check the [A Hero's Redemption Game Plan](A%20Hero's%20Redemption%20Game%20Plan.pdf)
  file.

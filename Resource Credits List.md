@@ -1,6 +1,6 @@
 # A Hero's Redemption 2D - Resource Credits List
 
-This project utilizes various free resources. We extend our sincere gratitude to all creators and contributors who made their work available for others to use. Below is a detailed list of resources used in the development of this game.
+This project utilizes various free resources. I extend my sincere gratitude to all creators and contributors who made their work available for others to use. Below is a detailed list of resources used in the development of this game.
 
 ## Photos
 
