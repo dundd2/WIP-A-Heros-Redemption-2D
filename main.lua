@@ -2054,9 +2054,13 @@ function handleMenuInput(dt)
   end
 end
 
--- 新增 handleStoryPageInput 函數
+
 function handleStoryPageInput(dt)
-  -- 滾動處理
+  if dt == nil then
+    print("[ERROR] dt IS NIL in handleStoryPageInput!") -- ERROR CHECK
+    return -- Exit function early to avoid further errors
+  end
+  print("[DEBUG] handleStoryPageInput dt value: ", dt) -- DEBUG PRINT
   local scrollSpeed = 200 * dt
   if love.keyboard.isDown("down") or love.keyboard.isDown("s") then
     storyPageState.scrollPosition = storyPageState.scrollPosition + scrollSpeed

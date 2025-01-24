@@ -8,12 +8,6 @@
 
 5.幫我看看為什麼故事模式裏面故事的對話並不能夠正確出現在遊戲裏面,so far 只有看到說話角色的圖片以及他們的名稱,對話內容的文字顏色應該要是黑色的,而且要像跑馬燈一樣走出來,修改在故事模式時,普通關數也就是除了第一的以及第十關之外,每關開始之前的敵人(enemy_name_xxx)對話的圖片都是直接使用同一個關卡的敵人站立的圖片,
 
-6:Error
-main.lua:1595: attempt to perform arithmetic on global 'dt' (a nil value)
-Traceback
-[love "callbacks.lua"]:254: in function 'handler' main.lua:1595: in function 'drawStoryPageUI' main.lua:1363: in function 'draw' 
-[love "callbacks.lua"]:195: in function <[love "callbacks.lua"]:171> [C]: in function 'xpcall',d Error: main.lua:2315: attempt to index a nil value stack traceback: 
-[love "boot.lua"]:461: in function '__index' main.lua:2315: in function main.lua:2237 [love "callbacks.lua"]:181: in function <[love "callbacks.lua"]:171> [C]: in function 'xpcall'
 
 9.請你根據現時的代碼重新修改並且增加音效播放的觸發點,例如要是當我暫停遊戲之後重新開始戰鬥音樂卻不會重新開始
 
