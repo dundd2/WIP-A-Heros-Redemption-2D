@@ -1,4 +1,3 @@
--- main.lua
 -- Build with love-12.0-win64 Beta
 -- A Hero's Redemption 2D Game Script
 -- Created by Dundd2, 2025/1
@@ -452,19 +451,22 @@ local story = {
   }
 }
 
+-- Add this line after story is declared
+local currentState = story.currentState
+
 -- Current language state
 local currentLanguage = "en" -- Default language
 
 -- Function to initialize text
-function story:initText()
+local function initText()
   -- Set default language or load from save if needed
   currentLanguage = "en" -- Or load saved language
 end
 
 -- Function to get text based on key and current language
-function story:getText(language, key, params)
+local function getText(language, key, params)
   language = language or currentLanguage -- Use current language if none provided
-  local langTable = self.text[language] or self.text["en"] -- Fallback to English if language not found
+  local langTable = story.text[language] or story.text["en"] -- Fallback to English if language not found
 
   local textString = langTable[key] or "**MISSING TEXT**" -- Show placeholder if text not found
 
@@ -477,19 +479,19 @@ function story:getText(language, key, params)
 end
 
 -- Function to set current language
-function story:setCurrentLanguage(language)
+local function setCurrentLanguage(language)
   currentLanguage = language
 end
 
 -- Function to get current language
-function story:getCurrentLanguage()
+function getCurrentLanguage()
   return currentLanguage
 end
 
 
 -- Update text display animation
-function story.updateTextEffect(dt)
-  local effect = story.textEffect
+function updateTextEffect(dt)
+  local effect = story.textEffect -- Access textEffect through story table
   if effect.currentText ~= effect.targetText then
       effect.timer = effect.timer + dt
       if effect.timer >= effect.charDelay then
@@ -502,8 +504,8 @@ function story.updateTextEffect(dt)
 end
 
 -- Set new target text
-function story.setTargetText(text)
-  story.textEffect.targetText = text
+function setTargetText(text)
+  story.textEffect.targetText = text -- Access textEffect through story table
   story.textEffect.currentText = ""
   story.textEffect.displayIndex = 0
   story.textEffect.timer = 0
@@ -511,39 +513,39 @@ function story.setTargetText(text)
 end
 
 -- Get current displayed text
-function story.getCurrentText()
-  return story.textEffect.currentText
+function getCurrentText()
+  return story.textEffect.currentText -- Access textEffect through story table
 end
 
 -- Check if text is fully displayed
-function story.isTextComplete()
-  return story.textEffect.isTextComplete
+function isTextComplete()
+  return story.textEffect.isComplete -- Access textEffect through story table
 end
 
 -- Start level dialogue
-function story.startLevelDialogue(level)
-  story.currentState.isPlaying = true
-  story.currentState.currentLevel = level
-  story.currentState.dialogueIndex = 1
-  story.currentState.isEnding = false
+function startLevelDialogue(level)
+  currentState.isPlaying = true
+  currentState.currentLevel = level
+  currentState.dialogueIndex = 1
+  currentState.isEnding = false
 
   -- Initialize the first dialogue immediately
   local currentLevel = story.levelIntros[level]
   if currentLevel and currentLevel.dialogues and currentLevel.dialogues[1] then
-      story.setTargetText(currentLevel.dialogues[1].text)
+      setTargetText(currentLevel.dialogues[1].text)
   end
 end
 
 -- Start ending dialogue
-function story.startEndingDialogue()
-  story.currentState.isPlaying = true
-  story.currentState.dialogueIndex = 1
-  story.currentState.isEnding = true
+function startEndingDialogue()
+  currentState.isPlaying = true
+  currentState.dialogueIndex = 1
+  currentState.isEnding = true
 end
 
 -- Get current dialogue content (single combined version)
-function story.getCurrentDialogue()
-  if not story.currentState.isPlaying then
+function getCurrentDialogue()
+  if not currentState.isPlaying then
       return {
           speaker = "System",
           text = "No active dialogue",
@@ -552,13 +554,13 @@ function story.getCurrentDialogue()
   end
 
   local dialogues
-  if story.currentState.isEnding then
+  if currentState.isEnding then
       -- Get the appropriate ending based on relationships
-      local endingType = story.determineEnding()
+      local endingType = determineEnding()
       dialogues = story.ending[endingType].dialogues
   else
       -- 確保當前關卡的對話內容存在
-      local currentLevel = story.levelIntros[story.currentState.currentLevel]
+      local currentLevel = story.levelIntros[currentState.currentLevel]
       if not currentLevel or not currentLevel.dialogues then
           return {
               speaker = "System",
@@ -569,8 +571,8 @@ function story.getCurrentDialogue()
       dialogues = currentLevel.dialogues
 
       -- 檢查對話索引是否有效
-      if story.currentState.dialogueIndex > #dialogues then
-          story.currentState.isPlaying = false
+      if currentState.dialogueIndex > #dialogues then
+          currentState.isPlaying = false
           return {
               speaker = "System",
               text = "Dialogue ended",
@@ -579,7 +581,7 @@ function story.getCurrentDialogue()
       end
   end
 
-  local currentDialogue = dialogues[story.currentState.dialogueIndex]
+  local currentDialogue = dialogues[currentState.dialogueIndex]
   if not currentDialogue then
       return {
           speaker = "System",
@@ -589,7 +591,7 @@ function story.getCurrentDialogue()
   end
 
   -- 設置要顯示的文字
-  story.setTargetText(currentDialogue.text)
+  setTargetText(currentDialogue.text)
 
   -- 返回完整的對話資訊
   return {
@@ -602,65 +604,65 @@ function story.getCurrentDialogue()
 end
 
 -- Next dialogue
-function story.nextDialogue()
+function nextDialogue()
   local currentDialogues
-  if story.currentState.isEnding then
+  if currentState.isEnding then
       currentDialogues = story.ending.good.dialogues
   else
-      currentDialogues = story.levelIntros[story.currentState.currentLevel].dialogues
+      currentDialogues = story.levelIntros[currentState.currentLevel].dialogues
   end
 
-  if story.currentState.dialogueIndex < #currentDialogues then
-      story.currentState.dialogueIndex = story.currentState.dialogueIndex + 1
+  if currentState.dialogueIndex < #currentDialogues then
+      currentState.dialogueIndex = currentState.dialogueIndex + 1
   else
-      story.currentState.isPlaying = false
+      currentState.isPlaying = false
   end
 end
 
 -- Skip current dialogue
-function story.skipDialogue()
-  story.currentState.isPlaying = false
+function skipDialogue()
+  currentState.isPlaying = false
 end
 
 -- Add new functions for emotion system
-function story.getEmotionEffect(emotion)
+function getEmotionEffect(emotion)
   return story.emotions[emotion] or {color = {1, 1, 1}, scale = 1}
 end
 
 -- Add new function for relationship changes
-function story.changeRelationship(character, amount)
+function changeRelationship(character, amount)
   if story.relationships[character] then
       story.relationships.character = math.max(-100, math.min(100, story.relationships[character] + amount))
   end
 end
 
 -- Add function to determine ending based on relationships
-function story.determineEnding()
+function determineEnding()
   local total = story.relationships.princess + story.relationships.king + story.relationships.villagers
   if total >= 150 then return "good"
   elseif total >= 0 then return "neutral"
   else return "tragic" end
 end
 
--- **Merged content from story.lua ends here.**
+-- **Merged content from lua ends here.**
 
 
 -- **Your existing main.lua code (if any) starts here.**
 -- You can add your game logic, love.load, love.draw, etc. below.
 
 function love.load()
-  story:initText() -- Initialize the story text system
+  initText() -- Initialize the story text system
 
   -- Example: Accessing story data
-  print("Game Title (EN): " .. story:getText("en", "menu_title"))
-  print("Game Title (ZH): " .. story:getText("zh", "menu_title"))
+  print("Game Title (EN): " .. getText("en", "menu_title"))
+  print("Game Title (ZH): " .. getText("zh", "menu_title"))
 
   -- Example: Starting a dialogue (you'll need to trigger this based on your game flow)
-  -- story.startLevelDialogue(1) -- Start dialogue for level 1
+  -- startLevelDialogue(1) -- Start dialogue for level 1
 end
 
 function love.update(dt)
-  story.updateTextEffect(dt) -- Update the text effect every frame
+  updateTextEffect(dt) -- Update the text effect every frame
   -- Your game update logic here
 end
 
@@ -668,10 +670,10 @@ function love.draw()
   -- Your game drawing logic here
 
   -- Example: Drawing the current dialogue text (if a dialogue is active)
-  if story.currentState.isPlaying then
-      local currentDialogue = story.getCurrentDialogue()
-      love.graphics.print(story:getText(story:getCurrentLanguage(), currentDialogue.speaker), 100, 100) -- Speaker name
-      love.graphics.print(story.getCurrentText(), 100, 120) -- Dialogue text
+  if currentState.isPlaying then
+      local currentDialogue = getCurrentDialogue()
+      love.graphics.print(getText(getCurrentLanguage(), currentDialogue.speaker), 100, 100) -- Speaker name
+      love.graphics.print(getCurrentText(), 100, 120) -- Dialogue text
   end
 end
 
@@ -829,7 +831,7 @@ enemyData = {
     critRate = 4,
     critDamage = 1.2,
     ai = "basic",
-    displayNameKey = "enemy_name_goblin" -- Add a display name key (remember to add to story.lua)
+    displayNameKey = "enemy_name_goblin" -- Add a display name key (remember to add to lua)
   },
   [2] = {
     image = "enemy_level2_stand",
@@ -841,7 +843,7 @@ enemyData = {
     critRate = 4,
     critDamage = 1.2,
     ai = "basic",
-    displayNameKey = "enemy_name_orc" -- Add a display name key (remember to add to story.lua)
+    displayNameKey = "enemy_name_orc" -- Add a display name key (remember to add to lua)
   },
   [3] = {
     image = "enemy_level3_stand",
@@ -853,7 +855,7 @@ enemyData = {
     critRate = 4,
     critDamage = 1.2,
     ai = "basic",
-    displayNameKey = "enemy_name_stonegolem" -- Add a display name key (remember to add to story.lua)
+    displayNameKey = "enemy_name_stonegolem" -- Add a display name key (remember to add to lua)
   },
   [4] = {
     image = "enemy_level4_stand",
@@ -865,7 +867,7 @@ enemyData = {
     critRate = 4,
     critDamage = 1.2,
     ai = "basic",
-    displayNameKey = "enemy_name_skeletonwarrior" -- Add a display name key (remember to add to story.lua)
+    displayNameKey = "enemy_name_skeletonwarrior" -- Add a display name key (remember to add to lua)
   },
   [5] = {
     image = "enemy_level5_stand",
@@ -877,7 +879,7 @@ enemyData = {
     critRate = 4,
     critDamage = 1.2,
     ai = "basic",
-    displayNameKey = "enemy_name_darkknight" -- Add a display name key (remember to add to story.lua)
+    displayNameKey = "enemy_name_darkknight" -- Add a display name key (remember to add to lua)
   },
   [6] = {
     image = "enemy_level6_stand",
@@ -889,7 +891,7 @@ enemyData = {
     critRate = 4,
     critDamage = 1.2,
     ai = "basic",
-    displayNameKey = "enemy_name_banshee" -- Add a display name key (remember to add to story.lua)
+    displayNameKey = "enemy_name_banshee" -- Add a display name key (remember to add to lua)
   },
   [7] = {
     image = "enemy_level7_stand",
@@ -901,7 +903,7 @@ enemyData = {
     critRate = 4,
     critDamage = 1.2,
     ai = "basic",
-    displayNameKey = "enemy_name_minotaur" -- Add a display name key (remember to add to story.lua)
+    displayNameKey = "enemy_name_minotaur" -- Add a display name key (remember to add to lua)
   },
   [8] = {
     image = "enemy_level8_stand",
@@ -913,7 +915,7 @@ enemyData = {
     critRate = 4,
     critDamage = 1.2,
     ai = "basic",
-    displayNameKey = "enemy_name_greendragon" -- Add a display name key (remember to add to story.lua)
+    displayNameKey = "enemy_name_greendragon" -- Add a display name key (remember to add to lua)
   },
   [9] = {
     image = "enemy_level9_stand",
@@ -925,7 +927,7 @@ enemyData = {
     critRate = 4,
     critDamage = 1.2,
     ai = "basic",
-    displayNameKey = "enemy_name_reddragon" -- Add a display name key (remember to add to story.lua)
+    displayNameKey = "enemy_name_reddragon" -- Add a display name key (remember to add to lua)
   },
   [10] = {
     image = "enemy_level10_stand", -- Demon King stand image
@@ -937,7 +939,7 @@ enemyData = {
     critRate = 10,
     critDamage = 1.5,
     ai = "tactical",
-    displayNameKey = "enemy_name_demonking" -- Add a display name key (remember to add to story.lua)
+    displayNameKey = "enemy_name_demonking" -- Add a display name key (remember to add to lua)
   }
 }
 print("[GAME] Enemy data loaded")
@@ -1209,7 +1211,7 @@ print("[GAME] Battle state initialized")
   print("[GAME] Options state initialized")
 
     -- 初始化故事頁面的文本內容
-    storyPageState.storyText = story:getText(currentGameLanguage, "game_full_story")
+    storyPageState.storyText = getText(currentGameLanguage, "game_full_story")
 
   -- Start playing menu music
   resources.sounds.menuBgm:setLooping(true)
@@ -1240,7 +1242,7 @@ print("[GAME] Battle state initialized")
   print("[GAME] love.load() - Game loading complete")
 
   -- Initialize story text
-  story:initText()
+  initText()
 end
 
 -- Add timer utility functions
@@ -1270,17 +1272,17 @@ function love.update(dt)
         handleLevelSelectInput(dt)
     elseif gameState == "story" then
         handleStoryInput()
-        story.updateTextEffect(dt)
+        updateTextEffect(dt)
 
         -- 改進故事文字更新邏輯
-        local currentDialogue = story.getCurrentDialogue()
+        local currentDialogue = getCurrentDialogue()
         if currentDialogue then
             -- 確保文字被設置
-            if story.getCurrentText() == "" then
-                story.setTargetText(currentDialogue.text)
+            if getCurrentText() == "" then
+                setTargetText(currentDialogue.text)
             end
             -- 持續更新文字效果
-            story.updateTextEffect(dt)
+            updateTextEffect(dt)
         end
     elseif gameState == "battle" then
         if pauseState.isPaused or gameState ~= "battle" then
@@ -1400,7 +1402,7 @@ function drawMainMenu()
   end
   love.graphics.setFont(font)
   love.graphics.setColor(1, 1, 1)
-  local title = story:getText(currentGameLanguage, "menu_title")
+  local title = getText(currentGameLanguage, "menu_title")
   local titleWidth = font:getWidth(title)
   love.graphics.print(title, windowWidth / 2 - titleWidth / 2, windowHeight * 0.2)
 
@@ -1427,9 +1429,9 @@ function drawMainMenu()
     else
       love.graphics.setColor(1, 1, 1)
     end
-    love.graphics.print(story:getText(currentGameLanguage, option.textKey), buttonRect.x, buttonRect.y)
+    love.graphics.print(getText(currentGameLanguage, option.textKey), buttonRect.x, buttonRect.y)
     love.graphics.setColor(0.8, 0.8, 0.8)
-    love.graphics.print(story:getText(currentGameLanguage, option.descriptionKey), buttonRect.x + 10, buttonRect.y + 20)
+    love.graphics.print(getText(currentGameLanguage, option.descriptionKey), buttonRect.x + 10, buttonRect.y + 20)
   end
 end
 
@@ -1450,7 +1452,7 @@ function drawLevelSelect()
     font = resources.fonts.chineseBattle
   end
   love.graphics.setFont(font)
-  local title = story:getText(currentGameLanguage, "level_select_title")
+  local title = getText(currentGameLanguage, "level_select_title")
   local titleWidth = font:getWidth(title)
   love.graphics.print(title, windowWidth / 2 - titleWidth / 2, 50)
 
@@ -1477,7 +1479,7 @@ function drawLevelSelect()
       else
           love.graphics.setColor(1, 1, 1)
       end
-      local text = story:getText(currentGameLanguage, "level_number", {level = i})
+      local text = getText(currentGameLanguage, "level_number", {level = i})
       local textWidth = fontUI:getWidth(text)
       love.graphics.print(text, buttonRect.x, buttonRect.y)
   end
@@ -1506,12 +1508,11 @@ function drawStoryDialogue()
         windowHeight/resources.images.background:getHeight())
 
     -- Get current dialogue safely
-    local currentDialogue = story.getCurrentDialogue()
+    local currentDialogue = getCurrentDialogue()
     if not currentDialogue then return end
 
     -- Draw background if available
-    local currentLevel = story.levelIntros[menuState.levelSelect.currentLevel]
-    if currentLevel and currentLevel.background then
+    local currentLevel = story.levelIntros[menuState.levelSelect.currentLevel]    if currentLevel and currentLevel.background then
         -- Use the already loaded background from resources
         local bgKey = string.match(currentLevel.background, "([^/]+)$"):gsub("%.png$", "")
         if resources.images[bgKey] then
@@ -1572,9 +1573,9 @@ function drawStoryDialogue()
     local textWidthLimit = dialogBoxWidth - (portraitImage and portraitDrawWidth + 40 or 40) -- Adjust text width limit based on portrait presence
 
     -- **DEBUG: Print the text being drawn**
-    -- print("Drawing story text: " .. story.getCurrentText()) -- Uncomment for debugging
+    -- print("Drawing story text: " .. getCurrentText()) -- Uncomment for debugging
 
-    love.graphics.printf(story.getCurrentText(), textStartX, textStartY, textWidthLimit, "left")
+    love.graphics.printf(getCurrentText(), textStartX, textStartY, textWidthLimit, "left")
 
 
     -- 統一說話者名稱樣式
@@ -1598,20 +1599,20 @@ function drawStoryDialogue()
 
 
     -- Draw continue prompt if text is complete
-    if story.isTextComplete() then
+    if isTextComplete() then
         love.graphics.setColor(1, 1, 1, 0.5 + math.sin(love.timer.getTime() * 5) * 0.5)
-        love.graphics.print(story:getText(currentGameLanguage, "story_continue_prompt"), dialogBoxX + dialogBoxWidth - 150, dialogBoxY + dialogBoxHeight - 30)
+        love.graphics.print(getText(currentGameLanguage, "story_continue_prompt"), dialogBoxX + dialogBoxWidth - 150, dialogBoxY + dialogBoxHeight - 30)
     end
 
     -- Draw skip button
     love.graphics.setColor(1, 1, 1)
     love.graphics.rectangle("line", windowWidth - 150, windowHeight - 50, 100, 30)
-    love.graphics.print(story:getText(currentGameLanguage, "story_skip_button"), windowWidth - 140, windowHeight - 45)
+    love.graphics.print(getText(currentGameLanguage, "story_skip_button"), windowWidth - 140, windowHeight - 45)
 end
 
 -- 新增 drawStoryPageUI 函數
-function drawStoryPageUI(dt) -- Receive dt here
-  storyPageState.navTimer = storyPageState.navTimer + dt -- 確保在 drawStoryPageUI 函數中更新 navTimer (原本沒有)
+function drawStoryPageUI() -- Remove dt parameter
+  storyPageState.navTimer = storyPageState.navTimer + 0.0167 -- Update navTimer without dt
 
   local windowWidth = love.graphics.getWidth()
   local windowHeight = love.graphics.getHeight()
@@ -1629,7 +1630,7 @@ function drawStoryPageUI(dt) -- Receive dt here
   end
   love.graphics.setFont(font)
   love.graphics.setColor(1, 1, 1)
-  local title = story:getText(currentGameLanguage, "story_page_title")
+  local title = getText(currentGameLanguage, "story_page_title")
   local titleWidth = font:getWidth(title)
   love.graphics.print(title, windowWidth / 2 - titleWidth / 2, 50)
 
@@ -1666,8 +1667,8 @@ function drawStoryPageUI(dt) -- Receive dt here
     fontUI = resources.fonts.chineseUI
   end
   love.graphics.setFont(fontUI)
-  local buttonTextWidth = fontUI:getWidth(story:getText(currentGameLanguage, "story_page_back_button"))
-  love.graphics.print(story:getText(currentGameLanguage, "story_page_back_button"), backButtonRect.x + backButtonRect.width / 2 - buttonTextWidth / 2, backButtonRect.y + backButtonRect.height / 2 - 10)
+  local buttonTextWidth = fontUI:getWidth(getText(currentGameLanguage, "story_page_back_button"))
+  love.graphics.print(getText(currentGameLanguage, "story_page_back_button"), backButtonRect.x + backButtonRect.width / 2 - buttonTextWidth / 2, backButtonRect.y + backButtonRect.height / 2 - 10)
 end
 
 function drawDialogueBox(dialogue, windowWidth, windowHeight)
@@ -1699,7 +1700,7 @@ function drawDialogueBox(dialogue, windowWidth, windowHeight)
     -- Draw dialogue text
     love.graphics.setColor(1, 1, 1)
     love.graphics.setFont(resources.fonts.ui)
-    love.graphics.printf(story.getCurrentText(), dialogBoxX + 40, dialogBoxY + 50, dialogBoxWidth - 80, "left")
+    love.graphics.printf(getCurrentText(), dialogBoxX + 40, dialogBoxY + 50, dialogBoxWidth - 80, "left")
 
     -- Draw continue/skip prompts
     drawDialoguePrompts(dialogBoxX, dialogBoxY, dialogBoxWidth, dialogBoxHeight, windowWidth, windowHeight)
@@ -1707,7 +1708,7 @@ end
 
 function drawDialoguePrompts(dialogBoxX, dialogBoxY, dialogBoxWidth, dialogBoxHeight, windowWidth, windowHeight)
     -- Draw continue prompt if text is complete
-    if story.isTextComplete() then
+    if isTextComplete() then
         love.graphics.setColor(1, 1, 1, 0.5 + math.sin(love.timer.getTime() * 5) * 0.5)
         love.graphics.print("Press ENTER to continue", dialogBoxX + dialogBoxWidth - 150, dialogBoxY + dialogBoxHeight - 30)
     end
@@ -1733,7 +1734,7 @@ function drawDialogueChoices(choices, windowWidth, windowHeight)
     -- Draw choices
     love.graphics.setFont(resources.fonts.ui)
     for i, choice in ipairs(choices) do
-        if i == story.choices.current then
+        if i == choices.current then
             love.graphics.setColor(1, 1, 0)
         else
             love.graphics.setColor(1, 1, 1)
@@ -1835,9 +1836,9 @@ function drawBattleUI()
       else
         love.graphics.setColor(1, 1, 1)
       end
-      love.graphics.print(story:getText(currentGameLanguage, "battle_action_" .. option.name:lower()), buttonRect.x, buttonRect.y)
+      love.graphics.print(getText(currentGameLanguage, "battle_action_" .. option.name:lower()), buttonRect.x, buttonRect.y)
       love.graphics.setColor(0.8, 0.8, 0.8)
-      love.graphics.print(story:getText(currentGameLanguage, "battle_action_desc_" .. option.name:lower()), buttonRect.x + 10, buttonRect.y + 20)
+      love.graphics.print(getText(currentGameLanguage, "battle_action_desc_" .. option.name:lower()), buttonRect.x + 10, buttonRect.y + 20)
     end
   end
 
@@ -1925,12 +1926,12 @@ function drawBattleMessage()
         love.graphics.setFont(fontBattleResult)
         if player.hp <= 0 then
           love.graphics.setColor(1, 0, 0)
-          local text = story:getText(currentGameLanguage, "battle_defeat")
+          local text = getText(currentGameLanguage, "battle_defeat")
           local textWidth = fontBattleResult:getWidth(text)
           love.graphics.print(text, love.graphics.getWidth() / 2 - textWidth / 2, love.graphics.getHeight() / 2 - 30)
         elseif enemy.hp <= 0 then
           love.graphics.setColor(0, 1, 0)
-          local text = story:getText(currentGameLanguage, "battle_victory")
+          local text = getText(currentGameLanguage, "battle_victory")
           local textWidth = fontBattleResult:getWidth(text)
           love.graphics.print(text, love.graphics.getWidth() / 2 - textWidth / 2, love.graphics.getHeight() / 2 - 30)
         end
@@ -2048,7 +2049,7 @@ function handleMenuInput(dt)
       menuState.currentOption = 1
     end
     if menuState.currentOption ~= prevOption then
-      print("[MENU] Navigated menu: " .. direction .. ", selected option index: " .. menuState.currentOption .. ", option name: " .. story:getText(currentGameLanguage, menuState.options[menuState.currentOption].textKey)) -- Use direction variable
+      print("[MENU] Navigated menu: " .. direction .. ", selected option index: " .. menuState.currentOption .. ", option name: " .. getText(currentGameLanguage, menuState.options[menuState.currentOption].textKey)) -- Use direction variable
     end
   end
 end
@@ -2093,16 +2094,16 @@ function handleLevelSelectInput(dt)
 end
 
 function handleStoryInput()
-    if love.keyboard.isDown("return") then -- Removed `and story.isTextComplete()` for immediate advance on key press
+    if love.keyboard.isDown("return") then -- Removed `and isTextComplete()` for immediate advance on key press
         print("[STORY] Continue dialogue pressed")
-        story.nextDialogue()
-        local nextDialogue = story.getCurrentDialogue()
+        nextDialogue()
+        local nextDialogue = getCurrentDialogue()
         if nextDialogue then
-            story.setTargetText(nextDialogue.text)
+            setTargetText(nextDialogue.text)
         end
 
-        if not story.currentState.isPlaying then
-            if story.currentState.isEnding then
+        if not currentState.isPlaying then
+            if currentState.isEnding then
                 gameState = "menu"
                 print("[GAME STATE] Game state changed to 'menu' after ending")
             else
@@ -2113,7 +2114,7 @@ function handleStoryInput()
         end
     elseif love.keyboard.isDown("escape") then
         print("[STORY] Skip dialogue pressed")
-        story.skipDialogue()
+        skipDialogue()
         gameState = "battle"
         print("[GAME STATE] Game state changed to 'battle' after skip")
         restartGame()
@@ -2150,7 +2151,7 @@ function handleBattleInput()
       battleState.currentOption = 1
     end
     if battleState.currentOption ~= prevBattleOption then
-      print("[BATTLE MENU] Navigated menu: " .. (love.keyboard.isDown("up") or love.keyboard.isDown("w") and "Up" or "Down") .. ", selected option index: " .. battleState.currentOption .. ", option name: " .. story:getText(currentGameLanguage, "battle_action_" .. battleState.options[battleState.currentOption].name:lower()))
+      print("[BATTLE MENU] Navigated menu: " .. (love.keyboard.isDown("up") or love.keyboard.isDown("w") and "Up" or "Down") .. ", selected option index: " .. battleState.currentOption .. ", option name: " .. getText(currentGameLanguage, "battle_action_" .. battleState.options[battleState.currentOption].name:lower()))
     end
   end
 end
@@ -2184,7 +2185,7 @@ function handleOptionsInput(dt)
         currentOption.currentOption = #currentOption.languageOptions
       end
       currentGameLanguage = currentOption.languageOptions[currentOption.currentOption]
-      story:setCurrentLanguage(currentGameLanguage)
+      setCurrentLanguage(currentGameLanguage)
       print("[OPTIONS MENU] Language changed to: " .. currentGameLanguage)
     elseif currentOption.type == "resolution" then -- Resolution change
       currentOption.currentOption = currentOption.currentOption - 1
@@ -2203,7 +2204,7 @@ function handleOptionsInput(dt)
         currentOption.currentOption = 1
       end
       currentGameLanguage = currentOption.languageOptions[currentOption.currentOption]
-      story:setCurrentLanguage(currentGameLanguage)
+      setCurrentLanguage(currentGameLanguage)
       print("[OPTIONS MENU] Language changed to: " .. currentGameLanguage)
     elseif currentOption.type == "resolution" then -- Resolution change
       currentOption.currentOption = currentOption.currentOption + 1
@@ -2224,7 +2225,7 @@ function handleOptionsInput(dt)
       optionsState.options = 1
     end
     if optionsState.currentOption ~= prevOption then
-      print("[OPTIONS MENU] Navigated menu: " .. direction .. ", selected option index: " .. optionsState.currentOption .. ", option name: " .. story:getText(currentGameLanguage, optionsState.options[optionsState.currentOption].textKey))
+      print("[OPTIONS MENU] Navigated menu: " .. direction .. ", selected option index: " .. optionsState.currentOption .. ", option name: " .. getText(currentGameLanguage, optionsState.options[optionsState.currentOption].textKey))
     end
   end
 
@@ -2236,7 +2237,7 @@ function handleOptionsInput(dt)
 
       if targetState and stateKey then -- Check if targetState and stateKey are valid
         targetState[stateKey] = not targetState[stateKey] -- Toggle the boolean state
-        print("[OPTIONS MENU] Toggled option: " .. story:getText(currentGameLanguage, option.textKey) .. ", new state: " .. tostring(targetState[stateKey]))
+        print("[OPTIONS MENU] Toggled option: " .. getText(currentGameLanguage, option.textKey) .. ", new state: " .. tostring(targetState[stateKey]))
          if option.state == "isMutedBGM" then -- Handle BGM mute
           if targetState.isMutedBGM then
             love.audio.stop()
@@ -2260,7 +2261,7 @@ function handleOptionsInput(dt)
       end
     elseif option.action then
       option.action() -- Execute action if any
-      print("[OPTIONS MENU] Option selected: " .. story:getText(currentGameLanguage, option.textKey))
+      print("[OPTIONS MENU] Option selected: " .. getText(currentGameLanguage, option.textKey))
     end
   end
   handleMenuInput(dt)  -- 選項介面也套用主選單的速度調整
@@ -2304,7 +2305,7 @@ function love.keypressed(key)
   if gameState == "menu" then
     if key == "return" or key == "space" then
       local option = menuState.options[menuState.currentOption]
-      print("[MENU] Option selected: " .. story:getText(currentGameLanguage, option.textKey))
+      print("[MENU] Option selected: " .. getText(currentGameLanguage, option.textKey))
       if option.textKey == "menu_select_level" then
         gameState = "levelSelect"
         print("[GAME STATE] Game state changed to 'levelSelect'")
@@ -2323,12 +2324,12 @@ function love.keypressed(key)
     if key == "return" then
         -- Properly start the story when selecting a level
         print("[LEVEL SELECT] Level " .. menuState.levelSelect.currentLevel .. " selected")
-        story.startLevelDialogue(menuState.levelSelect.currentLevel)
+        startLevelDialogue(menuState.levelSelect.currentLevel)
         gameState = "story"
         print("[GAME STATE] Game state changed to 'story'")
         -- Set initial text
-        local currentDialogue = story.getCurrentDialogue()
-        story.setTargetText(currentDialogue.text)
+        local currentDialogue = getCurrentDialogue()
+        setTargetText(currentDialogue.text)
     elseif key == "escape" then
       gameState = "menu"
       print("[GAME STATE] Game state changed to 'menu'")
@@ -2342,9 +2343,9 @@ function love.keypressed(key)
   elseif gameState == "story" then
     if key == "return" then
       print("[STORY] Continue dialogue key pressed")
-      story.nextDialogue()
-      if not story.currentState.isPlaying then
-        if story.currentState.isEnding then
+      nextDialogue()
+      if not currentState.isPlaying then
+        if currentState.isEnding then
           gameState = "menu"
           print("[GAME STATE] Game state changed to 'menu' from story ending")
         else
@@ -2355,7 +2356,7 @@ function love.keypressed(key)
       end
     elseif key == "escape" then
       print("[STORY] Skip dialogue key pressed")
-      story.skipDialogue()
+      skipDialogue()
       gameState = "battle"
       print("[GAME STATE] Game state changed to 'battle' from story skip")
       restartGame()
@@ -2369,7 +2370,7 @@ function love.keypressed(key)
           pauseState.currentOption = #pauseState.options
         end
         if pauseState.currentOption ~= prevPauseOption then
-          print("[PAUSE MENU] Navigated menu: Up, selected option index: " .. pauseState.currentOption .. ", option text: " .. story:getText(currentGameLanguage, pauseState.options[pauseState.currentOption].textKey))
+          print("[PAUSE MENU] Navigated menu: Up, selected option index: " .. pauseState.currentOption .. ", option text: " .. getText(currentGameLanguage, pauseState.options[pauseState.currentOption].textKey))
         end
       elseif key == "down" or key == "s" then
         local prevPauseOption = pauseState.currentOption
@@ -2378,12 +2379,12 @@ function love.keypressed(key)
           pauseState.currentOption = 1
         end
         if pauseState.currentOption ~= prevPauseOption then
-          print("[PAUSE MENU] Navigated menu: Down, selected option index: " .. pauseState.currentOption .. ", option text: " .. story:getText(currentGameLanguage, pauseState.options[pauseState.currentOption].textKey))
+          print("[PAUSE MENU] Navigated menu: Down, selected option index: " .. pauseState.currentOption .. ", option text: " .. getText(currentGameLanguage, pauseState.options[pauseState.currentOption].textKey))
         end
       elseif key == "return" or key == "space" then
         -- Execute the selected option's action
         local selectedPauseOption = pauseState.options[pauseState.currentOption]
-        print("[PAUSE MENU] Option selected: " .. story:getText(currentGameLanguage, selectedPauseOption.textKey))
+        print("[PAUSE MENU] Option selected: " .. getText(currentGameLanguage, selectedPauseOption.textKey))
         selectedPauseOption.action()
         if selectedPauseOption.textKey == "pause_continue" then
           print("[GAME STATE] Game unpaused")
@@ -2440,7 +2441,7 @@ function love.keypressed(key)
         resultState.currentOption = #resultState.options
       end
       if resultState.currentOption ~= prevResultOption then
-        print("[" .. gameState:upper() .. " MENU] Navigated menu: Up, selected option index: " .. resultState.currentOption .. ", option text: " .. story:getText(currentGameLanguage, resultState.options[resultState.currentOption].textKey))
+        print("[" .. gameState:upper() .. " MENU] Navigated menu: Up, selected option index: " .. resultState.currentOption .. ", option text: " .. getText(currentGameLanguage, resultState.options[resultState.currentOption].textKey))
       end
     elseif key == "down" or key == "s" then
       local prevResultOption = resultState.currentOption
@@ -2449,11 +2450,11 @@ function love.keypressed(key)
         resultState.currentOption = 1
       end
       if resultState.currentOption ~= prevResultOption then
-        print("[" .. gameState:upper() .. " MENU] Navigated menu: Down, selected option index: " .. resultState.currentOption .. ", option text: " .. story:getText(currentGameLanguage, resultState.options[resultState.currentOption].textKey))
+        print("[" .. gameState:upper() .. " MENU] Navigated menu: Down, selected option index: " .. resultState.currentOption .. ", option text: " .. getText(currentGameLanguage, resultState.options[resultState.currentOption].textKey))
       end
     elseif key == "return" or key == "space" then
       local selectedResultOption = resultState.options[resultState.currentOption]
-      print("[" .. gameState:upper() .. " MENU] Option selected: " .. story:getText(currentGameLanguage, selectedResultOption.textKey))
+      print("[" .. gameState:upper() .. " MENU] Option selected: " .. getText(currentGameLanguage, selectedResultOption.textKey))
       selectedResultOption.action()
       if selectedResultOption.textKey == "result_restart" then
         print("[GAME STATE] Game restarted from " .. gameState .. " menu")
@@ -2485,7 +2486,7 @@ function handleOptionsInputReturn()
   if option.type == "toggle" then
     local targetState = option.targetState or audioState
     targetState[option.state] = not targetState[option.state]
-    print("[OPTIONS MENU] Toggled option: " .. story:getText(currentGameLanguage, option.textKey) .. ", new state: " .. tostring(targetState[option.state]))
+    print("[OPTIONS MENU] Toggled option: " .. getText(currentGameLanguage, option.textKey) .. ", new state: " .. tostring(targetState[option.state]))
     if option.state == "isMutedBGM" then
       if targetState.isMutedBGM then
         love.audio.stop()
@@ -2506,7 +2507,7 @@ function handleOptionsInputReturn()
     end
   elseif option.action then
     option.action()
-    print("[OPTIONS MENU] Option selected: " .. story:getText(currentGameLanguage, option.textKey))
+    print("[OPTIONS MENU] Option selected: " .. getText(currentGameLanguage, option.textKey))
   end
 end
 
@@ -2518,7 +2519,7 @@ function love.mousepressed(x, y, button, istouch, presses)
         if x > buttonRect.x and x < buttonRect.x + buttonRect.width and y > buttonRect.y and y < buttonRect.y + buttonRect.height then
           menuState.currentOption = i
           local option = menuState.options[i]
-          print("[MENU] Option clicked: " .. story:getText(currentGameLanguage, option.textKey))
+          print("[MENU] Option clicked: " .. getText(currentGameLanguage, option.textKey))
           if option.textKey == "menu_select_level" then
             gameState = "levelSelect"
             print("[GAME STATE] Game state changed to 'levelSelect'")
@@ -2542,11 +2543,11 @@ function love.mousepressed(x, y, button, istouch, presses)
         if x > buttonRect.x and x < buttonRect.x + buttonRect.width and y > buttonRect.y and y < buttonRect.y + buttonRect.height then
           menuState.levelSelect.currentLevel = i
           print("[LEVEL SELECT] Level " .. menuState.levelSelect.currentLevel .. " selected by mouse")
-          story.startLevelDialogue(menuState.levelSelect.currentLevel)
+          startLevelDialogue(menuState.levelSelect.currentLevel)
           gameState = "story"
           print("[GAME STATE] Game state changed to 'story'")
-          local currentDialogue = story.getCurrentDialogue()
-          story.setTargetText(currentDialogue.text)
+          local currentDialogue = getCurrentDialogue()
+          setTargetText(currentDialogue.text)
           break
         end
       end
@@ -2588,7 +2589,7 @@ function love.mousepressed(x, y, button, istouch, presses)
       if x > buttonRect.x and x < buttonRect.x + buttonRect.width and y > buttonRect.y and y < buttonRect.y + buttonRect.height then
         pauseState.currentOption = i
         local option = pauseState.options[i]
-        print("[PAUSE MENU] Option clicked: " .. story:getText(currentGameLanguage, option.textKey))
+        print("[PAUSE MENU] Option clicked: " .. getText(currentGameLanguage, option.textKey))
         option.action()
         break
       end
@@ -2600,7 +2601,7 @@ elseif gameState == "victory" or gameState == "defeat" then
       if x > buttonRect.x and x < buttonRect.x + buttonRect.width and y > buttonRect.y and y < buttonRect.y + buttonRect.height then
         resultState.currentOption = i
         local option = resultState.options[i]
-        print("[" .. gameState:upper() .. " MENU] Option clicked: " .. story:getText(currentGameLanguage, option.textKey))
+        print("[" .. gameState:upper() .. " MENU] Option clicked: " .. getText(currentGameLanguage, option.textKey))
         option.action()
         break
       end
@@ -2612,7 +2613,7 @@ elseif gameState == "options" then
       if x > buttonRect.x and x < buttonRect.x + buttonRect.width and y > buttonRect.y and y < buttonRect.y + buttonRect.height then
         optionsState.currentOption = i
         local option = optionsState.options[i]
-        print("[OPTIONS MENU] Option clicked: " .. story:getText(currentGameLanguage, option.textKey))
+        print("[OPTIONS MENU] Option clicked: " .. getText(currentGameLanguage, option.textKey))
         if option.type == "toggle" then
           handleOptionsInputReturn()
         elseif option.action then
@@ -2633,7 +2634,7 @@ elseif gameState == "options" then
             currentOption.currentOption = #currentOption.languageOptions
           end
           currentGameLanguage = currentOption.languageOptions[currentOption.currentOption]
-          story:setCurrentLanguage(currentGameLanguage)
+          setCurrentLanguage(currentGameLanguage)
           print("[OPTIONS MENU] Language changed to: " .. currentGameLanguage .. " (Left Arrow Click)")
         elseif areaType == "right" then
           local currentOption = optionsState.options[optionsState.currentOption]
@@ -2642,7 +2643,7 @@ elseif gameState == "options" then
             currentOption.currentOption = 1
           end
           currentGameLanguage = currentOption.languageOptions[currentOption.currentOption]
-          story:setCurrentLanguage(currentGameLanguage)
+          setCurrentLanguage(currentGameLanguage)
           print("[OPTIONS MENU] Language changed to: " .. currentGameLanguage .. " (Right Arrow Click)")
         end
         break -- Exit loop after click is handled
@@ -2679,7 +2680,7 @@ elseif gameState == "options" then
   -- Back button click detection in Options
   if optionsState.backButtonArea then
     local backButtonRect = optionsState.backButtonArea
-    if x > backButtonRect.x and x < backButtonRect.x + backButtonRect.width and y > backButtonRect.y and y < backButtonRect.y + backButtonRect.height then
+    if x > backButtonRect.x and x < backButtonRect.x + backButtonRect.width and y > buttonRect.y and y < backButtonRect.y + backButtonRect.height then
       gameState = "menu"
       print("[OPTIONS MENU] Back button clicked")
     end
@@ -2855,9 +2856,9 @@ function performPlayerAttack()
       timer = 1
     })
 
-  battleState.message = story:getText(currentGameLanguage, "battle_msg_player_attack", {damage = damage})
+  battleState.message = getText(currentGameLanguage, "battle_msg_player_attack", {damage = damage})
   if isCrit then
-     battleState.message = story:getText(currentGameLanguage, "battle_msg_player_crit", {damage = damage})
+     battleState.message = getText(currentGameLanguage, "battle_msg_player_crit", {damage = damage})
    end
   battleState.messageTimer = 2
   battleState.phase = "action"
@@ -2928,7 +2929,7 @@ function performPlayerDefend_original()
     timer = 0.5
   })
 
-  battleState.message = story:getText(currentGameLanguage, "battle_msg_player_defend")
+  battleState.message = getText(currentGameLanguage, "battle_msg_player_defend")
   battleState.messageTimer = 2
   battleState.phase = "action"
   print("[BATTLE STATE] Battle phase changed to 'action'")
@@ -2955,13 +2956,13 @@ function performPlayerSpecial_original()
 
 animations.player.current = "attack"
 local damage = player.attack * 2
-print("[BATTLE] Player stats before special: HP=" .. player.hp .. ", Attack=" .. player.attack .. ", Defense=" .. player.defense .. ", CritRate=" .. player.critRate .. ", CritDamage=" .. player.critDamage)
+print("[BATTLE] Player stats before special: HP=" .. player.hp .. ", Attack=" .. player.attack .. ", Defense=" .. player.defense .. ", CritRate=" .. player.critRate .. ", CritDamage=" .. player.critRate .. ", CritDamage=" .. player.critDamage)
 print("[BATTLE] Enemy stats before special: HP=" .. enemy.hp .. ", Attack=" .. enemy.attack .. ", Defense=" .. enemy.defense .. ", CritRate=" .. enemy.critRate .. ", CritDamage=" .. enemy.critDamage)
 enemy.hp = math.max(0, enemy.hp - damage)
 print("[BATTLE] Player dealt " .. damage .. " damage to enemy with Special attack")
 
 -- Add special effect
-battleState.message = story:getText(currentGameLanguage, "battle_msg_player_special", {damage = damage})
+battleState.message = getText(currentGameLanguage, "battle_msg_player_special", {damage = damage})
 battleState.messageTimer = 2
 battleState.phase = "action"
 print("[BATTLE STATE] Battle phase changed to 'action'")
@@ -2996,7 +2997,7 @@ print("[BATTLE] Player stats before heal: HP=" .. player.hp .. ", MaxHP=" .. pla
 player.hp = math.min(player.maxHp, player.hp + healAmount)
 print("[BATTLE] Player healed for " .. healAmount .. " HP, current HP=" .. player.hp)
   animations.player.current = "stand"
-battleState.message = story:getText(currentGameLanguage, "battle_msg_player_heal", {healAmount = healAmount})
+battleState.message = getText(currentGameLanguage, "battle_msg_player_heal", {healAmount = healAmount})
 battleState.messageTimer = 2
 battleState.phase = "action"
 print("[BATTLE STATE] Battle phase changed to 'action'")
@@ -3039,9 +3040,9 @@ if action == "attack" then
   print("[BATTLE] Player stats before attack: HP=" .. player.hp .. ", Attack=" .. player.attack .. ", Defense=" .. player.defense .. ", CritRate=" .. player.critRate .. ", CritDamage=" .. player.critRate .. ", CritDamage=" .. player.critDamage)
   player.hp = math.max(0, player.hp - damage)
   print("[BATTLE] Enemy dealt " .. damage .. " damage to player. Crit=" .. tostring(isCrit))
-  battleState.message = story:getText(currentGameLanguage, "battle_msg_enemy_attack", {damage = damage})
+  battleState.message = getText(currentGameLanguage, "battle_msg_enemy_attack", {damage = damage})
   if isCrit then
-    battleState.message = story:getText(currentGameLanguage, "battle_msg_enemy_crit", {damage = damage})
+    battleState.message = getText(currentGameLanguage, "battle_msg_enemy_crit", {damage = damage})
     if not audioState.isMutedSFX then
       love.audio.play(resources.sounds.crit)
       print("[AUDIO] Played sound: crit")
@@ -3082,7 +3083,7 @@ if action == "attack" then
 else
   print("[BATTLE ACTION] Enemy action: Defend")
   enemy.isDefending = true
-  battleState.message = story:getText(currentGameLanguage, "battle_msg_enemy_defend")
+  battleState.message = getText(currentGameLanguage, "battle_msg_enemy_defend")
   -- Add defend effect
   local particleSystem = resources.particleSystems.defend
   particleSystem:emit(100) -- Emit some particles
@@ -3134,7 +3135,7 @@ local fontPauseTitle = resources.fonts.battle
     end
 love.graphics.setFont(fontPauseTitle)
 love.graphics.setColor(1, 1, 1)
-local title = story:getText(currentGameLanguage, "pause_title")
+local title = getText(currentGameLanguage, "pause_title")
 local titleWidth = fontPauseTitle:getWidth(title)
 love.graphics.print(title, windowWidth / 2 - titleWidth / 2, windowHeight / 2 - 100)
 
@@ -3164,8 +3165,8 @@ for i, option in ipairs(pauseState.options) do
     end
 
     love.graphics.rectangle("line", buttonRect.x, buttonRect.y, buttonRect.width, buttonRect.height)
-    local textWidth = fontUIPause:getWidth(story:getText(currentGameLanguage, option.textKey))
-    love.graphics.print(story:getText(currentGameLanguage, option.textKey),
+    local textWidth = fontUIPause:getWidth(getText(currentGameLanguage, option.textKey))
+    love.graphics.print(getText(currentGameLanguage, option.textKey),
         buttonRect.x + buttonRect.width / 2 - textWidth / 2,
         buttonRect.y + buttonRect.height / 2 - 10)
 end
@@ -3192,7 +3193,7 @@ function drawVictoryUI()
     end
     love.graphics.setFont(fontVictoryTitle)
     love.graphics.setColor(0, 1, 0)
-    local text = story:getText(currentGameLanguage, "victory_title")
+    local text = getText(currentGameLanguage, "victory_title")
     local textWidth = fontVictoryTitle:getWidth(text)
     love.graphics.print(text, windowWidth / 2 - textWidth / 2, windowHeight / 2 - 50)
 
@@ -3218,8 +3219,8 @@ function drawVictoryUI()
         fontUIVictory = resources.fonts.chineseUI
     end
     love.graphics.setFont(fontUIVictory)
-    local buttonTextWidth = fontUIVictory:getWidth(story:getText(currentGameLanguage, restartButton.textKey))
-    love.graphics.print(story:getText(currentGameLanguage, restartButton.textKey), restartButton.x + restartButton.width / 2 - buttonTextWidth / 2 , restartButton.y + restartButton.height / 2 - 10)
+    local buttonTextWidth = fontUIVictory:getWidth(getText(currentGameLanguage, restartButton.textKey))
+    love.graphics.print(getText(currentGameLanguage, restartButton.textKey), restartButton.x + restartButton.width / 2 - buttonTextWidth / 2 , restartButton.y + restartButton.height / 2 - 10)
 
     -- Main menu button
     local mainMenuButton = {
@@ -3238,8 +3239,8 @@ function drawVictoryUI()
         love.graphics.rectangle("line", mainMenuButton.x, mainMenuButton.y, mainMenuButton.width, mainMenuButton.height)
     end
     love.graphics.setFont(fontUIVictory)
-    local mainMenuTextWidth = fontUIVictory:getWidth(story:getText(currentGameLanguage, mainMenuButton.textKey))
-    love.graphics.print(story:getText(currentGameLanguage, mainMenuButton.textKey), mainMenuButton.x + mainMenuButton.width / 2 - mainMenuTextWidth / 2 , mainMenuButton.y + mainMenuButton.height / 2 - 10)
+    local mainMenuTextWidth = fontUIVictory:getWidth(getText(currentGameLanguage, mainMenuButton.textKey))
+    love.graphics.print(getText(currentGameLanguage, mainMenuButton.textKey), mainMenuButton.x + mainMenuButton.width / 2 - mainMenuTextWidth / 2 , mainMenuButton.y + mainMenuButton.height / 2 - 10)
 end
 
 -- Add function to draw defeat UI
@@ -3263,7 +3264,7 @@ function drawDefeatUI()
     end
  love.graphics.setFont(fontDefeatTitle)
  love.graphics.setColor(1, 0, 0)
- local text = story:getText(currentGameLanguage, "defeat_title")
+ local text = getText(currentGameLanguage, "defeat_title")
  local textWidth = fontDefeatTitle:getWidth(text)
  love.graphics.print(text, windowWidth / 2 - textWidth / 2, windowHeight / 2 - 50)
 
@@ -3289,8 +3290,8 @@ local restartButton = {
         fontUIDefeat = resources.fonts.chineseUI
     end
  love.graphics.setFont(fontUIDefeat)
- local buttonTextWidth = fontUIDefeat:getWidth(story:getText(currentGameLanguage, restartButton.textKey))
- love.graphics.print(story:getText(currentGameLanguage, restartButton.textKey), restartButton.x + restartButton.width / 2 - buttonTextWidth / 2 , restartButton.y + restartButton.height / 2 - 10)
+ local buttonTextWidth = fontUIDefeat:getWidth(getText(currentGameLanguage, restartButton.textKey))
+ love.graphics.print(getText(currentGameLanguage, restartButton.textKey), restartButton.x + restartButton.width / 2 - buttonTextWidth / 2 , restartButton.y + restartButton.height / 2 - 10)
 -- Main menu button
  local mainMenuButton = {
    x = windowWidth / 2 - 100,
@@ -3307,8 +3308,8 @@ local restartButton = {
     love.graphics.setColor(1, 1, 1)
     love.graphics.rectangle("line", mainMenuButton.x, mainMenuButton.y, mainMenuButton.width, mainMenuButton.height)
  end
- local mainMenuTextWidth = fontUIDefeat:getWidth(story:getText(currentGameLanguage, mainMenuButton.textKey))
- love.graphics.print(story:getText(currentGameLanguage, mainMenuButton.textKey), mainMenuButton.x + mainMenuButton.width / 2 - mainMenuTextWidth / 2 , mainMenuButton.y + mainMenuButton.height / 2 - 10)
+ local mainMenuTextWidth = fontUIDefeat:getWidth(getText(currentGameLanguage, mainMenuButton.textKey))
+ love.graphics.print(getText(currentGameLanguage, mainMenuButton.textKey), mainMenuButton.x + mainMenuButton.width / 2 - mainMenuTextWidth / 2 , mainMenuButton.y + mainMenuButton.height / 2 - 10)
 end
 -- Add function to draw skill information UI
 function drawSkillInfoUI()
@@ -3326,7 +3327,7 @@ local fontSkillInfoTitle = resources.fonts.battle
     end
 love.graphics.setFont(fontSkillInfoTitle)
 love.graphics.setColor(1, 1, 1)
-local title = story:getText(currentGameLanguage, "skill_info_title")
+local title = getText(currentGameLanguage, "skill_info_title")
 local titleWidth = fontSkillInfoTitle:getWidth(title)
 love.graphics.print(title, windowWidth / 2 - titleWidth / 2, 50)
 
@@ -3344,9 +3345,9 @@ local listY = 100
      else
           love.graphics.setColor(1, 1, 1)
      end
-     love.graphics.print(story:getText(currentGameLanguage, "skill_name_" .. skill.key), listX, listY + (i - 1) * 30)
+     love.graphics.print(getText(currentGameLanguage, "skill_name_" .. skill.key), listX, listY + (i - 1) * 30)
    love.graphics.setColor(0.8, 0.8, 0.8)
-   love.graphics.print(story:getText(currentGameLanguage, "skill_desc_" .. skill.key), listX + 20, listY + 20 + (i - 1) * 30)
+   love.graphics.print(getText(currentGameLanguage, "skill_desc_" .. skill.key), listX + 20, listY + 20 + (i - 1) * 30)
 end
 
 
@@ -3355,14 +3356,14 @@ end
  local detailsY = 100
  local selectedSkill = skillInfo[uiState.selectedSkill]
  love.graphics.setColor(1, 1, 1)
- love.graphics.print(story:getText(currentGameLanguage, "skill_detail_name") .. ": " .. story:getText(currentGameLanguage, "skill_name_" .. selectedSkill.key), detailsX, detailsY)
- love.graphics.print(story:getText(currentGameLanguage, "skill_detail_type") .. ": " .. story:getText(currentGameLanguage, "skill_type_" .. selectedSkill.type), detailsX, detailsY + 30)
- love.graphics.print(story:getText(currentGameLanguage, "skill_detail_desc") .. ": ", detailsX, detailsY + 60)
+ love.graphics.print(getText(currentGameLanguage, "skill_detail_name") .. ": " .. getText(currentGameLanguage, "skill_name_" .. selectedSkill.key), detailsX, detailsY)
+ love.graphics.print(getText(currentGameLanguage, "skill_detail_type") .. ": " .. getText(currentGameLanguage, "skill_type_" .. selectedSkill.type), detailsX, detailsY + 30)
+ love.graphics.print(getText(currentGameLanguage, "skill_detail_desc") .. ": ", detailsX, detailsY + 60)
 
  -- Wrap the details text
  love.graphics.setFont(fontUISkillInfo)
  love.graphics.setColor(0.8, 0.8, 0.8)
- love.graphics.printf(story:getText(currentGameLanguage, "skill_details_" .. selectedSkill.key), detailsX, detailsY + 80, windowWidth - detailsX - 50, "left")
+ love.graphics.printf(getText(currentGameLanguage, "skill_details_" .. selectedSkill.key), detailsX, detailsY + 80, windowWidth - detailsX - 50, "left")
  love.graphics.setFont(fontSkillInfoTitle)
 end
 
@@ -3409,7 +3410,7 @@ function drawOptionsUI()
   end
   love.graphics.setFont(fontOptionsTitle)
   love.graphics.setColor(1, 1, 1)
-  local title = story:getText(currentGameLanguage, "options_title")
+  local title = getText(currentGameLanguage, "options_title")
   local titleWidth = fontOptionsTitle:getWidth(title)
   love.graphics.print(title, windowWidth / 2 - titleWidth / 2, windowHeight * 0.2)
 
@@ -3439,7 +3440,7 @@ function drawOptionsUI()
     else
       love.graphics.setColor(1, 1, 1)
     end
-    local optionText = story:getText(currentGameLanguage, option.textKey)
+    local optionText = getText(currentGameLanguage, option.textKey)
 
     if option.type == "language" then
       optionText = optionText .. ": " .. string.upper(currentGameLanguage)
@@ -3491,7 +3492,7 @@ function drawOptionsUI()
 
     elseif option.type == "toggle" then
       local targetState = option.targetState or audioState
-      optionText = optionText .. ": " .. (targetState[option.state] and story:getText(currentGameLanguage, "options_on") or story:getText(currentGameLanguage, "options_off"))
+      optionText = optionText .. ": " .. (targetState[option.state] and getText(currentGameLanguage, "options_on") or getText(currentGameLanguage, "options_off"))
     end
 
     love.graphics.print(optionText, buttonRect.x, buttonRect.y)
