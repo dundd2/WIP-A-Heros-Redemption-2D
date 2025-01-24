@@ -95,25 +95,37 @@ local story = {
           enemy_name_reddragon = "Red Dragon",
           enemy_name_demonking = "Demon King",
 
-          story_page_title = "Game Story", -- 故事頁標題
+          story_page_title = "A Hero’s Redemption Story:", -- 故事頁標題
           story_page_back_button = "Back to Menu", -- 故事頁返回按鈕
           game_full_story = [[
-          Long ago, in a realm of magic and wonder, there existed a kingdom known as Azure, famed for its prosperity and the wisdom of its benevolent ruler, King Alaric.  For generations, peace reigned, and the land flourished under the Azure banner.
 
-          However, tranquility is but a fleeting dream in the tapestry of time. From the shadowed depths of the Netherworld, a malevolent force stirred.  The Demon King, a being of immense power and boundless cruelty, cast his covetous gaze upon Azure.  Envy gnawed at his dark heart, and a lust for dominion consumed his wicked soul.
+A month ago, the Demon King led his army to conquer cities and seize territories, abducting the king's princess and threatening the king to either cede land or abdicate the throne.
 
-          With legions of grotesque minions at his command, the Demon King unleashed a devastating assault upon Azure. Border towns crumbled under the onslaught, and fear spread like wildfire through the once-peaceful countryside.  King Alaric, though wise and just, was unprepared for such a cataclysmic invasion.  His armies, while valiant, were pushed back, and the kingdom teetered on the brink of collapse.
+One day, a brave hero happened upon an urgent notice issued by the king:
 
-          Amidst the chaos, tragedy struck the royal family.  Princess Elara, the King's beloved daughter, known for her radiant spirit and unwavering kindness, was abducted by the Demon King's forces.  Hope dwindled in Azure, replaced by despair as the princess, a symbol of their future, became a prisoner in the enemy's clutches.
+"The Demon King, after conquering the city, infiltrated the palace one night, kidnapped the princess, and imprisoned her in his dungeon. The king implores capable heroes and righteous individuals to venture into the dungeon and rescue the princess. He promises that the one who succeeds will not only marry the princess but also receive countless gold and silver treasures. However, numerous adventurers have already attempted the challenge, yet none have returned alive."
 
-          Desperate, King Alaric issued a plea to all corners of the land, seeking heroes brave enough to challenge the Demon King and rescue Princess Elara.  Many answered the call, knights of valor, mages of might, and warriors of renown, all ventured into the Demon King's domain.  Yet, weeks turned into months, and none returned.  Whispers of their failures and fates only deepened the gloom over Azure.
+Upon learning of this, the brave hero decisively volunteered his services, determined to embark on the perilous journey to rescue the princess from the dungeon.
 
-          In this darkest hour, a lone figure emerged – a hero, perhaps not of noble birth or legendary lineage, but one with a heart burning with righteousness and a resolve forged in the fires of adversity.  This hero, you, answered the King's desperate call, not for reward or glory, but driven by an innate sense of justice and compassion for the suffering of Azure.
+After entering the dungeon, the hero discovered the entrance was sealed by powerful magic, making it impossible to return. Left with no other choice, he had to press forward. 
+On the first level, the hero vanquished all the monsters that stood in his way, advancing all the way to the third level.
 
-          Your journey begins now, in the shadow of despair, but with a glimmer of hope ignited by your courage.  The path ahead is fraught with peril, teeming with the Demon King's monstrous legions, and shrouded in dark magic.  But the fate of Azure, the life of Princess Elara, and the very balance of the realm rests upon your shoulders.
+However, he suddenly encountered the Demon King! The Demon King himself had appeared and dispatched his personal guards to intercept him. Just as the hero engaged in battle, in the heat of the fight, he realized it was a trap. But the Demon King seized the opportunity to launch a sneak attack, catching him off guard and knocking him unconscious.
 
-          Will you rise to the challenge? Will you brave the dangers, overcome the darkness, and become the hero Azure desperately needs?  Your legend is about to unfold.
-          ]],
+When the hero awoke, he found himself confined to a prison cell.
+
+He was awakened by a bandit in the adjacent cell. The bandit told him that he had infiltrated the dungeon not to rescue the princess, but to seek legendary treasures, but was ultimately defeated by the guards and imprisoned. At this moment, the hero was shocked to realize that his equipment had been stolen by the Demon King,
+, and he had even lost a significant portion of his stats due to the trap.
+
+The bandit revealed that this dungeon not only held countless treasures but also contained secret potion, elixirs and items that could enhance one's abilities—the very reason why the Demon King had become so powerful. The bandit also informed the hero that he had already dug a secret passage to escape the prison cell and then left on his own.
+
+After escaping the prison cell, the hero began a treacherous journey.
+
+Within the dungeon, he encountered all sorts of NPCs, some offering assistance, while others had ulterior motives. After enduring countless challenges and strengthening his own abilities, he finally reached the deepest part of the dungeon, where he faced the ultimate enemy—the Demon King.
+
+In the end, the hero successfully defeated the Demon King, broke the seal, and rescued the princess.
+Returning to the surface with the princess, the hero was met with a warm welcome from the king and the people. Keeping his promise, the king gave the princess's hand in marriage to the hero and rewarded him with immense gold and silver treasures. Amidst the joy and congratulations, the hero achieved his own happy ending.
+]],
       },
       zh = {
           menu_title = "英雄的救贖 2D",
@@ -206,25 +218,44 @@ local story = {
           enemy_name_reddragon = "紅龍",
           enemy_name_demonking = "惡魔之王",
 
-          story_page_title = "遊戲故事", -- 故事頁標題 (中文)
+          story_page_title = "英雄的救贖 2D 故事", -- 故事頁標題 (中文)
           story_page_back_button = "返回主選單", -- 故事頁返回按鈕 (中文)
           game_full_story = [[
-          很久以前，在一個充滿魔法和奇蹟的國度裡，存在著一個被稱為蔚藍王國的國度，以其繁榮和仁慈的統治者阿拉里克國王的智慧而聞名。 世世代代，和平統治著，這片土地在蔚藍的旗幟下蓬勃發展。
+一個月前，魔王率領他的軍隊征服城池、奪取領土，並綁架國王的公主，威脅國王要么割讓土地，要么退位讓賢。  
 
-          然而，在時間的長河中，寧靜只是一個轉瞬即逝的夢想。 從冥界的陰影深處，一股邪惡的力量蠢蠢欲動。 惡魔之王，一個擁有巨大力量和無限殘酷的生物，將他貪婪的目光投向了蔚藍。 嫉妒啃噬著他黑暗的心，對統治的慾望吞噬了他邪惡的靈魂。
+某日，一位勇敢的英雄偶然發現了一則國王發布的緊急告示：  
 
-          惡魔之王指揮著成群的怪異僕從，對蔚藍發動了毀滅性的襲擊。 邊境城鎮在猛攻下崩潰，恐懼像野火一樣蔓延到曾經和平的鄉村。 阿拉里克國王雖然睿智公正，但對如此災難性的入侵毫無準備。 他的軍隊雖然英勇，但還是被擊退了，王國在崩潰的邊緣搖搖欲墜。
+>「魔王在攻陷城池後，某夜潛入皇宮，綁架了公主，並將她囚禁在他的地牢之中。國王懇求天下有志之士與正義之人勇闖地牢，拯救公主。他承諾，成功者不僅可迎娶公主，還將獲得無數金銀財寶。然而，已有無數冒險者前去挑戰，卻無一人生還。」  
 
-          在混亂之中，悲劇降臨了王室。 伊拉拉公主，國王心愛的女兒，以她光芒四射的精神和堅定不移的善良而聞名，被惡魔之王的軍隊綁架了。 蔚藍的希望逐漸消失，取而代之的是絕望，因為公主，他們未來的象徵，淪為了敵人的階下囚。
+得知此事後，這位英雄當機立斷，自願挺身而出，決心踏上這條危險重重的道路，誓要從魔王的地牢中救出公主。  
 
-          阿拉里克國王絕望地向全國各地發出呼籲，尋找足夠勇敢的英雄來挑戰惡魔之王並解救伊拉拉公主。 許多人響應了號召，勇敢的騎士、強大的法師和著名的戰士，都冒險進入了惡魔之王的領地。 然而，數週變成了數月，卻沒有人回來。 關於他們的失敗和命運的耳語只會加深籠罩在蔚藍之上的陰霾。
+進入地牢  
 
-          在這最黑暗的時刻，一個孤獨的身影出現了——一個英雄，也許不是出身高貴或血統傳奇，但卻擁有一顆燃燒著正義的心和在逆境之火中鍛造的決心。 這個英雄，你，響應了國王絕望的呼喚，不是為了回報或榮耀，而是出於對正義的與生俱來的意識以及對蔚藍人民苦難的同情。
+當英雄踏入地牢後，他發現入口已被強大的魔法封印，使他無法回頭，只能硬著頭皮向前。  
+在第一層，他擊敗了所有擋路的怪物，一路挺進至第三層。  
 
-          你的旅程現在開始了，在絕望的陰影中，但你的勇氣點燃了一線希望。 前方的道路充滿危險，遍布惡魔之王的怪物軍團，並籠罩在黑暗魔法之中。 但蔚藍的命運，伊拉拉公主的生命，以及王國的平衡都掌握在你的肩上。
+然而，他突然遭遇魔王！魔王親自現身，派遣親衛軍圍剿他。當英雄奮戰之際，漸漸察覺這是一場陷阱——但就在他意識到危險的瞬間，魔王趁其不備發動偷襲，令他措手不及，最終被擊昏過去。  
 
-          你願意迎接挑戰嗎？ 你會勇敢地面對危險，克服黑暗，成為蔚藍迫切需要的英雄嗎？ 你的傳奇即將展開。
-          ]],
+囚禁與覺醒  
+
+當英雄醒來時，他發現自己被囚禁在牢房中。  
+
+喚醒他的是隔壁牢房的一名盜賊。盜賊告訴他，自己潛入地牢並非為了拯救公主，而是為了尋找傳說中的寶藏，結果被守衛打敗，落得同樣的下場。此時，英雄震驚地發現自己的裝備已被魔王奪走，甚至因為陷阱的影響，他的能力也被大幅削弱。  
+
+盜賊透露，這座地牢內不僅藏有無數珍寶，還蘊藏著能夠強化能力的秘藥與道具，這正是魔王強大的真正原因。隨後，盜賊悄悄告知英雄，他已經挖通了一條密道，準備逃出牢房，然後便獨自離去。  
+
+崎嶇的旅程  
+
+成功逃出牢房後，英雄開始了艱難的旅程。  
+
+在地牢內，他遇見了形形色色的 NPC——有些提供幫助，有些則心懷鬼胎。在歷經無數挑戰、強化自身能力後，他終於抵達了地牢的最深處，面對最終的宿敵——魔王。  
+
+終章  
+
+最終，英雄憑藉自身的智慧與實力擊敗了魔王，打破封印，成功救出了公主。  
+
+當他帶著公主重返地面時，國王與人民為之歡欣鼓舞。國王信守承諾，將公主許配給英雄，並賜予他無數金銀財寶。在一片歡樂與祝賀聲中，英雄迎來了屬於自己的美好結局。
+]],
       },
   },
   -- Text display effect settings
