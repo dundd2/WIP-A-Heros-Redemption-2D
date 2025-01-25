@@ -1,7 +1,7 @@
 # A Hero's Redemption 2D
 
 A Hero's Redemption 2D is a simple RPG battle game built using the LÖVE 12 Beta game Framework.
-It serves as a personal proof-of-concept and learning exercise to better understand the mechanics, systems, and potential complexities involved in game development, specifically in preparation for a larger Unity 3D group project for later this year. This 2D project aims to provide insights into code volume, game architecture, and overall development effort. Ultimately, it helps assess the feasibility of achieving our ambitious 3D game goals within a few months of part-time development.
+It serves as a personal proof-of-concept and learning exercise to understand better the mechanics, systems, and potential complexities involved in game development, Specifically, in preparation for my **Year 2 G6078: Game Design and Development** Assignments 2 and 3, which will be larger Unity 3D group projects taking place between January and May 2025. This 2D project aims to provide insights into code volume, game architecture, and overall development effort. Ultimately, it helps assess the feasibility of achieving our ambitious 3D game goals within a few months of part-time development.
 
 ## ScreenShot (V0.01)
 ![ScreenShot1](https://github.com/dundd2/A-Heros-Redemption-2D/blob/main/assets/Screenshot/SC(1).gif)
@@ -36,7 +36,7 @@ This 2D demo is intentionally simplified and **does not include** features plann
 - **Play Status UI**:Current HP, MP, EXP, LV.  MC’s statistics, 
 - **Quest Page** : Show players’ mission
 
-Despite these simplifications, the 2D game codebase already consists of approximately **3500+ lines of code**. This provides a tangible reference point for understanding the scale and complexity even of a reduced-scope game and highlights potential challenges in developing a more feature-rich 3D project within our timeframe.
+Despite these simplifications, the 2D game codebase already consists of approximately **3600+ lines of code** (V0.01). This provides a tangible reference point for understanding the scale and complexity even of a reduced-scope game and highlights potential challenges in developing a more feature-rich 3D project within our timeframe.
 
 For more detailed features and information about our current (Jan 2025) plans for the 3D project, please check the [A Hero's Redemption Game Plan](A%20Hero's%20Redemption%20Game%20Plan.pdf)
  file.
@@ -82,9 +82,9 @@ For more detailed features and information about our current (Jan 2025) plans fo
 
 ### Game Mechanics
 
-*   **Main Menu:** You can choose to start a level or exit the game.
+*   **Main Menu:** You can start a level or exit the game.
 *   **Level Select:** Select the level you want to play.
-*   **Story Mode:** Before each battle, there will be a story dialogue. Press Enter to continue, or Esc to skip.
+*   **Story Mode:** there will be a story dialogue before each battle. Press Enter to continue, or Esc to skip.
 *   **Battle System:**
     *   The battle is turn-based. The player and enemy alternate their turns.
     *   On your turn, you can choose between Attack, Defend, Special Attack and Heal skill.
@@ -93,9 +93,9 @@ For more detailed features and information about our current (Jan 2025) plans fo
     *   The battle ends when either the player's or the enemy's HP reaches 0.
 *  **Pause Menu:**
     *   Press ESC in battle to pause the game
-    *   You can chose to continue the game, restart the game or return to main menu
+    *   You can choose to continue the game, restart the game or return to the main menu
 * **Victory/Defeat:**
-    * After a battle ends, you can restart the game or return to main menu
+    * After a battle ends, you can restart the game or return to the main menu
 
 ## Skills Used
 
