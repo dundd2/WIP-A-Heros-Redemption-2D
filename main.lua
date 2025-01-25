@@ -430,7 +430,7 @@ Returning to the surface with the princess, the hero was met with a warm welcome
       hopeful = {color = {0.8, 1, 0.8}, scale = 1},
       serious = {color = {0.9, 0.9, 1}, scale = 1},
       mocking = {color = {1, 0.6, 0.6}, scale = 1.2},
-      threatening = {color = {1, 0.4, 0.4}, scale = 1.3},
+      threatening = {color = {1, 0.4, 4}, scale = 1.3},
       overjoyed = {color = {1, 1, 0.6}, scale = 1.2},
       grateful = {color = {0.8, 0.8, 1}, scale = 1},
       humble = {color = {0.7, 1, 0.7}, scale = 0.9},
@@ -695,6 +695,12 @@ end
 function love.update(dt)
   updateTextEffect(dt) -- Update the text effect every frame
   -- Your game update logic here
+  if gameState == "menu" then
+    if not audioState.isMutedBGM and not resources.sounds.menuBgm:isPlaying() then
+      resources.sounds.menuBgm:play()
+      print("[AUDIO] Menu BGM resumed")
+    end
+  end
 end
 
 function love.draw()
@@ -854,7 +860,6 @@ print("[GAME] Resources loaded")
 enemyData = {
   [1] = {
     image = "enemy_level1_stand", -- Stand image key
-    attackImage = "enemy_level1_attack", -- Attack image key
     hp = 30,
     maxHp = 60,
     attack = 6,
@@ -866,7 +871,6 @@ enemyData = {
   },
   [2] = {
     image = "enemy_level2_stand",
-    attackImage = "enemy_level2_attack",
     hp = 30,
     maxHp = 60,
     attack = 6,
@@ -878,7 +882,6 @@ enemyData = {
   },
   [3] = {
     image = "enemy_level3_stand",
-    attackImage = "enemy_level3_attack",
     hp = 40,
     maxHp = 60,
     attack = 6,
@@ -890,7 +893,6 @@ enemyData = {
   },
   [4] = {
     image = "enemy_level4_stand",
-    attackImage = "enemy_level4_attack",
     hp = 60,
     maxHp = 60,
     attack = 6,
@@ -902,7 +904,6 @@ enemyData = {
   },
   [5] = {
     image = "enemy_level5_stand",
-    attackImage = "enemy_level5_attack",
     hp = 60,
     maxHp = 60,
     attack = 6,
@@ -914,7 +915,6 @@ enemyData = {
   },
   [6] = {
     image = "enemy_level6_stand",
-    attackImage = "enemy_level6_attack",
     hp = 60,
     maxHp = 60,
     attack = 6,
@@ -926,7 +926,6 @@ enemyData = {
   },
   [7] = {
     image = "enemy_level7_stand",
-    attackImage = "enemy_level7_attack",
     hp = 60,
     maxHp = 60,
     attack = 6,
@@ -938,7 +937,6 @@ enemyData = {
   },
   [8] = {
     image = "enemy_level8_stand",
-    attackImage = "enemy_level8_attack",
     hp = 60,
     maxHp = 60,
     attack = 6,
@@ -950,7 +948,6 @@ enemyData = {
   },
   [9] = {
     image = "enemy_level9_stand",
-    attackImage = "enemy_level9_attack",
     hp = 60,
     maxHp = 60,
     attack = 6,
@@ -962,7 +959,6 @@ enemyData = {
   },
   [10] = {
     image = "enemy_level10_stand", -- Demon King stand image
-    attackImage = "enemy_level10_attack", -- Demon King attack image
     hp = 150,
     maxHp = 150,
     attack = 15,
@@ -1125,7 +1121,19 @@ print("[GAME] Battle state initialized")
   pauseState = {
       isPaused = false,
       options = {
-        {textKey = "pause_continue", action = function() pauseState.isPaused = false; audioState.isMutedBGM = false; audioState.isMutedSFX = false end},
+        {
+          textKey = "pause_continue",
+          action = function()
+            pauseState.isPaused = false
+            audioState.isMutedBGM = false
+            audioState.isMutedSFX = false
+            -- Restart battle BGM on unpause if not muted
+            if not audioState.isMutedBGM and resources.sounds.battleBgm then
+              resources.sounds.battleBgm:stop()
+              resources.sounds.battleBgm:play()
+            end
+          end
+        },
         {textKey = "pause_restart", action = function() restartGame() end},
         {textKey = "pause_main_menu", action = function() gameState = "menu"; pauseState.isPaused = false end},
         {textKey = "pause_quit_game", action = function() love.event.quit() end}
@@ -1206,7 +1214,7 @@ print("[GAME] Battle state initialized")
     currentOption = 1,
     -- Timer for menu navigation delay
     navTimer = 0,
-    navDelay = 0.3, -- 調整主選單選項卡速度 (原本 0.2 改為 0.3)
+    navDelay = 0.6, -- 調整主選單選項卡速度 (原本 0.2 改為 0.3)
     buttonAreas = {}, -- Add buttonAreas for mouse interaction
 
     -- Level selection state
@@ -1214,7 +1222,7 @@ print("[GAME] Battle state initialized")
         currentLevel = 1,
         maxLevel = 10,
         navTimer = 0,
-        navDelay = 0.3, -- 調整關卡選擇介面選項卡速度 (原本 0.2 改為 0.3)
+        navDelay = 0.6, -- 調整關卡選擇介面選項卡速度 (原本 0.2 改為 0.3)
         buttonAreas = {}, -- Add buttonAreas for mouse interaction
         backButtonArea = {} -- Add backButtonArea for mouse interaction
     }
@@ -1233,7 +1241,7 @@ print("[GAME] Battle state initialized")
     },
     currentOption = 1,
     navTimer = 0,
-    navDelay = 0.3, -- 調整選項介面選項卡速度 (原本 0.2 改為 0.3)
+    navDelay = 0.6, -- 調整選項介面選項卡速度 (原本 0.2 改為 0.3)
     buttonAreas = {}, -- Add buttonAreas for mouse interaction
     backButtonArea = {}, -- Add backButtonArea for mouse interaction
     languageButtonAreas = {} ,-- Add languageButtonAreas for mouse interaction
@@ -1302,7 +1310,7 @@ function love.update(dt)
     elseif gameState == "levelSelect" then
         handleLevelSelectInput(dt)
     elseif gameState == "story" then
-        handleStoryInput()
+        handleStoryInput(dt)
         updateTextEffect(dt)
 
         -- 改進故事文字更新邏輯
@@ -1464,6 +1472,14 @@ function drawMainMenu()
     love.graphics.setColor(0.8, 0.8, 0.8)
     love.graphics.print(getText(currentGameLanguage, option.descriptionKey), buttonRect.x + 10, buttonRect.y + 20)
   end
+
+  -- Draw version/author info at bottom-right
+  local fontUI = resources.fonts.ui
+  love.graphics.setFont(fontUI)
+  local versionInfo = "V0.02\nBy Dundd2\nBuild with love-12.0-win64 Beta"
+  local textWidth = fontUI:getWidth(versionInfo)
+  local textHeight = fontUI:getHeight()
+  love.graphics.print(versionInfo, love.graphics.getWidth() - textWidth - 100, love.graphics.getHeight() - textHeight - 100)
 end
 
 -- Add level selection screen
@@ -1608,6 +1624,16 @@ function drawStoryDialogue()
 
     love.graphics.printf(getCurrentText(), textStartX, textStartY, textWidthLimit, "left")
 
+    if menuState.levelSelect.currentLevel > 1 and menuState.levelSelect.currentLevel < 10 then
+        local eData = enemyData[menuState.levelSelect.currentLevel]
+        if eData and eData.image then
+            love.graphics.draw(resources.images[eData.image], 200, 200)
+        end
+    end
+
+    love.graphics.setColor(0, 0, 1, 1)  -- Draw text in blue
+    love.graphics.print(getCurrentText(), 400, 400)
+    love.graphics.setColor(1, 1, 1, 1)  -- Reset color to white
 
     -- 統一說話者名稱樣式
     local fontBattleStory = resources.fonts.battle
@@ -1791,9 +1817,8 @@ function drawCharacters()
   -- Draw the enemy with current animation and scaling constraints
   local currentLevelData = enemyData[menuState.levelSelect.currentLevel] -- Get current level's enemy data
   local enemyStandImageKey = currentLevelData.image -- Get the stand image key
-  local enemyAttackImageKey = currentLevelData.attackImage -- Get the attack image key
 
-  local enemyImage = animations.enemy.current == "stand" and resources.images[enemyStandImageKey] or resources.images[enemyAttackImageKey]
+  local enemyImage = resources.images[enemyStandImageKey]
 
   -- Calculate scale to ensure character doesn't exceed max width
   local enemyScale = positions.enemy.scale
@@ -2128,8 +2153,13 @@ function handleLevelSelectInput(dt)
   handleMenuInput(dt) -- 關卡選擇頁面也套用主選單的速度調整
 end
 
-function handleStoryInput()
-    if love.keyboard.isDown("return") then -- Removed `and isTextComplete()` for immediate advance on key press
+local storyEnterTimer = 0
+local storyEnterDelay = 0.6
+
+function handleStoryInput(dt)
+    storyEnterTimer = storyEnterTimer + dt
+    if love.keyboard.isDown("return") and storyEnterTimer > storyEnterDelay then
+        storyEnterTimer = 0
         print("[STORY] Continue dialogue pressed")
         nextDialogue()
         local nextDialogue = getCurrentDialogue()
@@ -2191,12 +2221,16 @@ function handleBattleInput()
   end
 end
 
+local optionsNavTimerLR = 0
+local optionsNavDelayLR = 0.6
+
 function handleOptionsInput(dt)
   local moved = false
   local prevOption = optionsState.currentOption
   local direction = "None" -- Default direction
 
   optionsState.navTimer = optionsState.navTimer + dt
+  optionsNavTimerLR = optionsNavTimerLR + dt
 
   if optionsState.navTimer > optionsState.navDelay then
     if love.keyboard.isDown("up") or love.keyboard.isDown("w") then
@@ -2212,44 +2246,48 @@ function handleOptionsInput(dt)
     end
   end
 
-  if love.keyboard.isDown("left") or love.keyboard.isDown("a") then
-    local currentOption = optionsState.options[optionsState.currentOption]
-    if currentOption.type == "language" then
-      currentOption.currentOption = currentOption.currentOption - 1
-      if currentOption.currentOption < 1 then
-        currentOption.currentOption = #currentOption.languageOptions
+  if optionsNavTimerLR > optionsNavDelayLR then
+    if love.keyboard.isDown("left") or love.keyboard.isDown("a") then
+      optionsNavTimerLR = 0
+      local currentOption = optionsState.options[optionsState.currentOption]
+      if currentOption.type == "language" then
+        currentOption.currentOption = currentOption.currentOption - 1
+        if currentOption.currentOption < 1 then
+          currentOption.currentOption = #currentOption.languageOptions
+        end
+        currentGameLanguage = currentOption.languageOptions[currentOption.currentOption]
+        setCurrentLanguage(currentGameLanguage)
+        print("[OPTIONS MENU] Language changed to: " .. currentGameLanguage)
+      elseif currentOption.type == "resolution" then -- Resolution change
+        currentOption.currentOption = currentOption.currentOption - 1
+        if currentOption.currentOption < 1 then
+          currentOption.currentOption = #currentOption.resolutionOptions
+        end
+        currentResolutionIndex = currentOption.currentOption
+        applyResolutionChange() -- Apply resolution change
       end
-      currentGameLanguage = currentOption.languageOptions[currentOption.currentOption]
-      setCurrentLanguage(currentGameLanguage)
-      print("[OPTIONS MENU] Language changed to: " .. currentGameLanguage)
-    elseif currentOption.type == "resolution" then -- Resolution change
-      currentOption.currentOption = currentOption.currentOption - 1
-      if currentOption.currentOption < 1 then
-        currentOption.currentOption = #currentOption.resolutionOptions
+      moved = true
+    elseif love.keyboard.isDown("right") or love.keyboard.isDown("d") then
+      optionsNavTimerLR = 0
+      local currentOption = optionsState.options[optionsState.currentOption]
+       if currentOption.type == "language" then
+        currentOption.currentOption = currentOption.currentOption + 1
+        if currentOption.currentOption > #currentOption.languageOptions then
+          currentOption.currentOption = 1
+        end
+        currentGameLanguage = currentOption.languageOptions[currentOption.currentOption]
+        setCurrentLanguage(currentGameLanguage)
+        print("[OPTIONS MENU] Language changed to: " .. currentGameLanguage)
+      elseif currentOption.type == "resolution" then -- Resolution change
+        currentOption.currentOption = currentOption.currentOption + 1
+        if currentOption.currentOption > #currentOption.resolutionOptions then
+          currentOption.currentOption = #currentOption.resolutionOptions
+        end
+         currentResolutionIndex = currentOption.currentOption
+         applyResolutionChange() -- Apply resolution change
       end
-      currentResolutionIndex = currentOption.currentOption
-      applyResolutionChange() -- Apply resolution change
+      moved = true
     end
-    moved = true
-  elseif love.keyboard.isDown("right") or love.keyboard.isDown("d") then
-    local currentOption = optionsState.options[optionsState.currentOption]
-     if currentOption.type == "language" then
-      currentOption.currentOption = currentOption.currentOption + 1
-      if currentOption.currentOption > #currentOption.languageOptions then
-        currentOption.currentOption = 1
-      end
-      currentGameLanguage = currentOption.languageOptions[currentOption.currentOption]
-      setCurrentLanguage(currentGameLanguage)
-      print("[OPTIONS MENU] Language changed to: " .. currentGameLanguage)
-    elseif currentOption.type == "resolution" then -- Resolution change
-      currentOption.currentOption = currentOption.currentOption + 1
-      if currentOption.currentOption > #currentOption.resolutionOptions then
-        currentOption.currentOption = #currentOption.resolutionOptions
-      end
-      currentResolutionIndex = currentOption.currentOption
-      applyResolutionChange() -- Apply resolution change
-    end
-    moved = true
   end
 
 
@@ -2758,7 +2796,6 @@ enemy = {
   x = 600,
   y = 300,
   image = resources.images[currentEnemyData.image], -- Use stand image from enemyData
-  attackImage = resources.images[currentEnemyData.attackImage], -- Store attack image key
   hp = currentEnemyData.hp,
   maxHp = currentEnemyData.maxHp,
   attack = currentEnemyData.attack,
