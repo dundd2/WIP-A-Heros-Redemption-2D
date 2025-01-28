@@ -494,17 +494,30 @@ local function initText()
   currentLanguage = "en" -- Or load saved language
 end
 
--- Function to get text based on key and current language
-local function getText(language, key, params)
-  language = language or currentLanguage -- Use current language if none provided
-  local langTable = story.text[language] or story.text["en"] -- Fallback to English if language not found
+-- Add a simple function to validate language
+local function validateLanguage(lang)
+  if story.text[lang] then
+    return lang
+  else
+    print("[WARNING] Language '" .. tostring(lang) .. "' not found, fallback to default.")
+    return "en"
+  end
+end
 
-  local textString = langTable[key] or "**MISSING TEXT**" -- Show placeholder if text not found
+-- Modify getText to use validation and fallback
+local function getText(language, key, params, defaultValue)
+  language = validateLanguage(language or currentLanguage)
+  local langTable = story.text[language]
+  if not langTable[key] then
+    print("[WARNING] Missing text key '" .. key .. "' for language '" .. language .. "'.")
+    return defaultValue or "**MISSING TEXT**"
+  end
 
+  local textString = langTable[key]
   if params then
-      for k, v in pairs(params) do
-          textString = string.gsub(textString, "%%{" .. k .. "}", tostring(v)) -- Replace placeholders
-      end
+    for k, v in pairs(params) do
+      textString = string.gsub(textString, "%%{" .. k .. "}", tostring(v))
+    end
   end
   return textString
 end
@@ -1425,6 +1438,17 @@ function love.draw()
 end
 
 -- Add new main menu drawing function
+local uiLayoutConfig = {
+  mainMenu = {
+    titleOffsetY = 0.2,
+    buttonWidth = 200,
+    buttonHeight = 40,
+    buttonSpacing = 50,
+    buttonOffsetY = 0.4
+  },
+  -- ...existing UI config for other screens...
+}
+
 function drawMainMenu()
   local windowWidth = love.graphics.getWidth()
   local windowHeight = love.graphics.getHeight()
@@ -1443,7 +1467,11 @@ function drawMainMenu()
   love.graphics.setColor(1, 1, 1)
   local title = getText(currentGameLanguage, "menu_title")
   local titleWidth = font:getWidth(title)
-  love.graphics.print(title, windowWidth / 2 - titleWidth / 2, windowHeight * 0.2)
+  love.graphics.print(
+    title,
+    windowWidth / 2 - titleWidth / 2,
+    windowHeight * uiLayoutConfig.mainMenu.titleOffsetY
+  )
 
   -- Draw menu options
   local fontUI = resources.fonts.ui
@@ -1453,12 +1481,15 @@ function drawMainMenu()
   love.graphics.setFont(fontUI)
   menuState.buttonAreas = {} -- Store button areas for mouse interaction
   for i, option in ipairs(menuState.options) do
-    local optionY = windowHeight * 0.4 + (i-1) * 50
+    local optionY = (
+      windowHeight * uiLayoutConfig.mainMenu.buttonOffsetY
+      + (i - 1) * uiLayoutConfig.mainMenu.buttonSpacing
+    )
     local buttonRect = {
-      x = windowWidth / 2 - 100,
+      x = windowWidth / 2 - uiLayoutConfig.mainMenu.buttonWidth / 2,
       y = optionY,
-      width = 200,
-      height = 40
+      width = uiLayoutConfig.mainMenu.buttonWidth,
+      height = uiLayoutConfig.mainMenu.buttonHeight
     }
     menuState.buttonAreas[i] = buttonRect
 
@@ -1972,8 +2003,7 @@ function drawBattleMessage()
             love.graphics.getWidth() / 2 - textWidth / 2,
             love.graphics.getHeight() - 150)
     end
-
-    -- ...rest of drawBattleMessage code...
+    
     if battleState.phase == "result" then
         local fontBattleResult = resources.fonts.battle
         if currentGameLanguage == "zh" then
@@ -2373,7 +2403,37 @@ function applyResolutionChange()
 end
 
 
--- Modify keypressed function to handle menu selection
+local inputMapping = {
+  ["return"] = "select_option",
+  ["escape"] = "back",
+  ["up"] = "move_up",
+  ["down"] = "move_down",
+  ["w"] = "move_up",
+  ["s"] = "move_down"
+}
+
+local function handleInputAction(action)
+  -- 根據 action 進行對應邏輯，例如:
+  if action == "select_option" then
+    -- ...existing code...
+  elseif action == "back" then
+    -- ...existing code...
+  elseif action == "move_up" then
+    -- ...existing code...
+  elseif action == "move_down" then
+    -- ...existing code...
+  end
+end
+
+function love.keypressed(key)
+  local mappedAction = inputMapping[key]
+  if mappedAction then
+    handleInputAction(mappedAction)
+  else
+    -- ...existing code for other keys...
+  end
+end
+
 function love.keypressed(key)
   if gameState == "menu" then
     if key == "return" or key == "space" then
