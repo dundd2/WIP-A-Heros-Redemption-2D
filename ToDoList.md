@@ -4,8 +4,6 @@
 
 2.新增讓遊戲裏面的按鈕都可以用滑鼠選擇而不只是鍵盤
 
-3.
-
 4.幫我看看為什麼故事模式裏面故事的對話並不能夠正確出現在遊戲裏面,so far 只有看到說話角色的圖片以及他們的名稱,對話內容的文字顏色應該要是blue色的,
 
 5.請你根據現時的代碼重新修改並且增加音效播放的觸發點,例如要是當我重新開始level,戰鬥音樂卻不會重新開始,以及多我重新回到主頁之後主頁的音樂不會播放
@@ -22,35 +20,28 @@
 
 11.發揮你的創意幫我在 option頁面中增加更多可以供玩家選擇的內容選項,又或者更多的cheat option,讓玩家可以自由地設定字體的大小
 
-12.建立合理的防禦性編程,預防錯誤發生:
-
-2. 資源加載 (resources 表格)
-
-問題: 資源加載部分使用了 pcall 來嘗試加載背景圖片，這是一個很好的防禦性措施，可以避免因為單個圖片加載失敗而導致整個遊戲崩潰。但是，對於其他重要資源 (例如字體、聲音效果、其他圖片)，如果加載失敗，目前的代碼似乎沒有明確的錯誤處理。
-
-防禦性改進:
-
-統一的資源加載錯誤處理: 為所有資源加載 (圖片、聲音、字體等) 實現統一的錯誤處理機制。可以使用一個輔助函數來封裝 love.graphics.newImage, love.audio.newSource, love.graphics.newFont 等函數，並在加載失敗時記錄錯誤信息並提供預設資源或終止遊戲 (如果資源是必須的)。
-
-檢查必要的資源是否加載成功: 在 love.load 函數的末尾，可以加入檢查，確認所有必要的資源 (例如 UI 字體、基礎圖片等) 都已成功加載。如果關鍵資源缺失，可以顯示錯誤信息並終止遊戲，因為遊戲可能無法正常運行。
-
-預設資源: 為關鍵資源提供預設的 fallback 資源。例如，如果某個敵人的圖片加載失敗，可以使用一個通用的佔位符圖片，而不是直接報錯或顯示空白。
-
-3. 遊戲狀態和邏輯 (gameState, battleState, menuState 等)
-
-問題: 遊戲狀態依賴於字符串標識符 ("menu", "battle", "victory" 等)。如果字符串拼寫錯誤，或者在狀態切換時出現邏輯錯誤，可能會導致狀態混亂或者未預期的行為。
-
-防禦性改進:
-
-使用枚舉或常量來定義遊戲狀態: 使用 Lua 的表格來模擬枚舉，將遊戲狀態定義為常量，例如 GAME_STATE = { MENU = "menu", BATTLE = "battle", VICTORY = "victory" }。這樣在代碼中使用狀態時，可以使用 gameState = GAME_STATE.MENU，這樣可以避免字符串拼寫錯誤，並提高代碼的可讀性。
-
-狀態轉換驗證: 在狀態轉換的函數中 (例如 handleMenuInput, handleBattleInput 等)，可以加入驗證邏輯，確保狀態轉換是有效的。例如，從 "battle" 狀態只能轉換到 "victory", "defeat" 或 "pause" 狀態，而不是直接跳到 "menu" (除非通過暫停菜單)。
-
-斷言 (Assertions) 用於關鍵邏輯: 在關鍵的遊戲邏輯部分，例如戰鬥傷害計算、狀態更新等，可以使用 assert 來驗證假設條件是否成立。例如，在傷害計算後，可以使用 assert(damage >= 0, "Damage should not be negative") 來確保傷害值是非負的。在開發階段，斷言可以幫助快速發現邏輯錯誤。
 
 4. 輸入處理 (love.keypressed, love.mousepressed)
 
 問題: 輸入處理函數 (例如 love.keypressed) 中，使用了大量的 if-elseif 結構來判斷按鍵和執行不同的操作。如果狀態和邏輯變得更複雜，這些函數可能會變得難以維護和理解。
+from:
+battleState = {
+  phase = "select",
+  turn = "player",
+  message = "Battle Start!",
+  messageTimer = 2,
+  options = {
+    {name = "Attack", description = "Deal damage to enemy"},
+    {name = "Defend", description = "Reduce incoming damage"},
+    {name = "Special", description = "Powerful attack with delay"},
+      {name = "Heal", description = "Restore health"},
+  },
+  currentOption = 1,
+  buttonAreas = {}, -- Add buttonAreas for mouse interaction
+  effects = {}
+}
+print("[GAME] Battle state initialized")
+
 
 防禦性改進:
 

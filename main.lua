@@ -240,7 +240,7 @@ Returning to the surface with the princess, the hero was met with a warm welcome
 
 當英雄醒來時，他發現自己被囚禁在牢房中。  
 
-喚醒他的是隔壁牢房的一名盜賊。盜賊告訴他，自己潛入地牢並非為了拯救公主，而是為了尋找傳說中的寶藏，結果被守衛打敗，落得同樣的下場。此時，英雄震驚地發現自己的裝備已被魔王奪走，甚至因為陷阱的影響，他的能力也被大幅削弱。  
+喚醒他的是隔壁牢房的一名盜賊。盜購告訴他，自己潛入地牢並非為了拯救公主，而是為了尋找傳說中的寶藏，結果被守衛打敗，落得同樣的下場。此時，英雄震驚地發現自己的裝備已被魔王奪走，甚至因為陷阱的影響，他的能力也被大幅削弱。  
 
 盜賊透露，這座地牢內不僅藏有無數珍寶，還蘊藏著能夠強化能力的秘藥與道具，這正是魔王強大的真正原因。隨後，盜賊悄悄告知英雄，他已經挖通了一條密道，準備逃出牢房，然後便獨自離去。  
 
@@ -792,79 +792,98 @@ function love.load()
 timers = {}
 print("[GAME] Timer system initialized")
 
+-- Function to safely load resources with error handling
+local function loadResource(loadFunc, resourceType, assetPath, ...)
+  local success, resource = pcall(loadFunc, assetPath, ...)
+  if success then
+    print(string.format("[RESOURCE] Loaded %s: %s", resourceType, assetPath))
+    return resource
+  else
+    print(string.format("[ERROR] Failed to load %s: %s - %s", resourceType, assetPath, resource))
+    return nil -- Return nil on failure
+  end
+end
+
+-- Function to safely load images
+local function loadImage(assetPath)
+  return loadResource(love.graphics.newImage, "image", assetPath)
+end
+
+-- Function to safely load sounds
+local function loadSound(assetPath, type)
+  return loadResource(love.audio.newSource, "sound", assetPath, type)
+end
+
+-- Function to safely load fonts
+local function loadFont(assetPath, size)
+  return loadResource(love.graphics.newFont, "font", assetPath, size)
+end
+
 -- Resources
 resources = {
   images = {
-    background = love.graphics.newImage("assets/background.png"),
-    uiFrame = love.graphics.newImage("assets/battle-ui-frame.png"),
-    playerStand = love.graphics.newImage("assets/player-stand.png"),
-    playerAttack = love.graphics.newImage("assets/player-attack.png"),
-    -- Removed generic enemy images (enemy-stand.png, enemy-attack.png)
-    hitEffect = love.graphics.newImage("assets/effect-hit.png"),
-    defendEffect = love.graphics.newImage("assets/effect-defend.png"),
-    skillAttack = love.graphics.newImage("assets/skill-attack.png"),
-    skillDefend = love.graphics.newImage("assets/skill-defend.png"),
-    skillSpecial = love.graphics.newImage("assets/skill-special.png"),
-    skillHeal = love.graphics.newImage("assets/skill-heal.png"),
-    cooldownOverlay = love.graphics.newImage("assets/cooldown-overlay.png"),
-    dialogBox = love.graphics.newImage("assets/dialog-box.png"),
-    -- Portraits
-    portraitHero = love.graphics.newImage("assets/portrait-hero.png"),
-    portraitKing = love.graphics.newImage("assets/portrait-king.png"),
-    portraitPrincess = love.graphics.newImage("assets/portrait-princess.png"),
-    -- Backgrounds
-    battleBgForest = love.graphics.newImage("assets/battle-bg-forest.png"),
-    battleBgCave = love.graphics.newImage("assets/battle-bg-cave.png"),
-    battleBgCastle = love.graphics.newImage("assets/battle-bg-castle.png"),
-    battleBgDungeon = love.graphics.newImage("assets/battle-bg-dungeon.png"),
-    -- Enemy types (level specific images)
-    -- Removed generic enemySlime image
-    enemyDemonKing = love.graphics.newImage("assets/enemy-demonking.png"), -- Keep Demon King image
-
-    -- Level-specific enemy stand and attack images (loaded based on naming convention)
-    enemy_level1_stand = love.graphics.newImage("assets/enemy_level1_stand.png"),
-    enemy_level1_attack = love.graphics.newImage("assets/enemy_level1_attack.png"),
-    enemy_level2_stand = love.graphics.newImage("assets/enemy_level2_stand.png"),
-    enemy_level2_attack = love.graphics.newImage("assets/enemy_level2_attack.png"),
-    enemy_level3_stand = love.graphics.newImage("assets/enemy_level3_stand.png"),
-    enemy_level3_attack = love.graphics.newImage("assets/enemy_level3_attack.png"),
-    enemy_level4_stand = love.graphics.newImage("assets/enemy_level4_stand.png"),
-    enemy_level4_attack = love.graphics.newImage("assets/enemy_level4_attack.png"),
-    enemy_level5_stand = love.graphics.newImage("assets/enemy_level5_stand.png"),
-    enemy_level5_attack = love.graphics.newImage("assets/enemy_level5_attack.png"),
-    enemy_level6_stand = love.graphics.newImage("assets/enemy_level6_stand.png"),
-    enemy_level6_attack = love.graphics.newImage("assets/enemy_level6_attack.png"),
-    enemy_level7_stand = love.graphics.newImage("assets/enemy_level7_stand.png"),
-    enemy_level7_attack = love.graphics.newImage("assets/enemy_level7_attack.png"),
-    enemy_level8_stand = love.graphics.newImage("assets/enemy_level8_stand.png"),
-    enemy_level8_attack = love.graphics.newImage("assets/enemy_level8_attack.png"),
-    enemy_level9_stand = love.graphics.newImage("assets/enemy_level9_stand.png"),
-    enemy_level9_attack = love.graphics.newImage("assets/enemy_level9_attack.png"),
-    enemy_level10_stand = love.graphics.newImage("assets/enemy_level10_stand.png"),
-    enemy_level10_attack = love.graphics.newImage("assets/enemy_level10_attack.png")
+    background = loadImage("assets/background.png"),
+    dialogBox = loadImage("assets/dialog-box.png"),
+    uiFrame = loadImage("assets/battle-ui-frame.png"),
+    playerStand = loadImage("assets/player-stand.png"),
+    playerAttack = loadImage("assets/player-attack.png"),
+    battleBgForest = loadImage("assets/battle-bg-forest.png"),
+    battleBgCave = loadImage("assets/battle-bg-cave.png"),
+    battleBgDungeon = loadImage("assets/battle-bg-dungeon.png"),
+    battleBgCastle = loadImage("assets/battle-bg-castle.png"),
+    hitEffect = loadImage("assets/effect-hit.png"),
+    defendEffect = loadImage("assets/effect-defend.png"),
+    skillDefend = loadImage("assets/skill-defend.png"),
+    skillSpecial = loadImage("assets/skill-special.png"),
+    skillHeal = loadImage("assets/skill-heal.png"),
+    cooldownOverlay = loadImage("assets/cooldown-overlay.png"),
+    portraitHero = loadImage("assets/portrait-hero.png"),
+    portraitKing = loadImage("assets/portrait-king.png"),
+    portraitPrincess = loadImage("assets/portrait-princess.png"),
+    portraitDemonKing = loadImage("assets/portrait-demonking.png"),
+    enemyDemonKing = loadImage("assets/enemy-demonking.png"),
+    enemy_level1_stand = loadImage("assets/enemy_level1_stand.png"),
+    enemy_level1_attack = loadImage("assets/enemy_level1_attack.png"),
+    enemy_level2_stand = loadImage("assets/enemy_level2_stand.png"),
+    enemy_level2_attack = loadImage("assets/enemy_level2_attack.png"),
+    enemy_level3_stand = loadImage("assets/enemy_level3_stand.png"),
+    enemy_level3_attack = loadImage("assets/enemy_level3_attack.png"),
+    enemy_level4_stand = loadImage("assets/enemy_level4_stand.png"),
+    enemy_level4_attack = loadImage("assets/enemy_level4_attack.png"),
+    enemy_level5_stand = loadImage("assets/enemy_level5_stand.png"),
+    enemy_level5_attack = loadImage("assets/enemy_level5_attack.png"),
+    enemy_level6_stand = loadImage("assets/enemy_level6_stand.png"),
+    enemy_level6_attack = loadImage("assets/enemy_level6_attack.png"),
+    enemy_level7_stand = loadImage("assets/enemy_level7_stand.png"),
+    enemy_level7_attack = loadImage("assets/enemy_level7_attack.png"),
+    enemy_level8_stand = loadImage("assets/enemy_level8_stand.png"),
+    enemy_level8_attack = loadImage("assets/enemy_level8_attack.png"),
+    enemy_level9_stand = loadImage("assets/enemy_level9_stand.png"),
+    enemy_level9_attack = loadImage("assets/enemy_level9_attack.png"),
+    enemy_level10_stand = loadImage("assets/enemy_level10_stand.png"),
+    enemy_level10_attack = loadImage("assets/enemy_level10_attack.png")
   },
      sounds = {
-         crit = love.audio.newSource("assets/crit.mp3", "static"),
-         attack = love.audio.newSource("assets/attack.mp3", "static"),
-         heal = love.audio.newSource("assets/heal.mp3", "static"),
-         special = love.audio.newSource("assets/special.mp3", "static"),
-         defend = love.audio.newSource("assets/defend.mp3", "static"),
-         victory = love.audio.newSource("assets/victory.mp3", "static"),
-         defeat = love.audio.newSource("assets/defeat.mp3", "static"),
-         menuBgm = love.audio.newSource("assets/menu.mp3", "stream"),
-         battleBgm = love.audio.newSource("assets/battle.mp3", "stream"),
-         -- Add varied sound effects
-         attackLight = love.audio.newSource("assets/attack-light.mp3", "static"),
-         attackHeavy = love.audio.newSource("assets/attack-heavy.mp3", "static"),
-         enemyHit1 = love.audio.newSource("assets/enemy-hit1.mp3", "static"),
-         enemyHit2 = love.audio.newSource("assets/enemy-hit2.mp3", "static"),
+         crit = loadSound("assets/crit.mp3", "static"),
+         attack = loadSound("assets/attack.mp3", "static"),
+         heal = loadSound("assets/heal.mp3", "static"),
+         special = loadSound("assets/special.mp3", "static"),
+         defend = loadSound("assets/defend.mp3", "static"),
+         victory = loadSound("assets/victory.mp3", "static"),
+         defeat = loadSound("assets/defeat.mp3", "static"),
+         menuBgm = loadSound("assets/menu.mp3", "stream"),
+         battleBgm = loadSound("assets/battle.mp3", "stream"),
+         attackLight = loadSound("assets/attack-light.mp3", "static"),
+         attackHeavy = loadSound("assets/attack-heavy.mp3", "static"),
+         enemyHit1 = loadSound("assets/enemy-hit1.mp3", "static"),
+         enemyHit2 = loadSound("assets/enemy-hit2.mp3", "static"),
       },
   fonts = {
-    ui = love.graphics.newFont("assets/ui-font.ttf", 16),
-    battle = love.graphics.newFont("assets/battle-font.ttf", 24),
-    damage = love.graphics.newFont("assets/damage-font.ttf", 32),
-    chineseUI = love.graphics.newFont("assets/chinese-font.ttf", 16),
-    chineseBattle = love.graphics.newFont("assets/chinese-font.ttf", 24),
+    ui = loadFont("assets/ui-font.ttf", 16),
+    battle = loadFont("assets/battle-font.ttf", 24),
+    damage = loadFont("assets/damage-font.ttf", 32),
+    chineseUI = loadFont("assets/chinese-font.ttf", 16),
+    chineseBattle = loadFont("assets/chinese-font.ttf", 24),
   }
 }
 print("[GAME] Resources loaded")
@@ -1284,8 +1303,8 @@ print("[GAME] Battle state initialized")
   -- Try to load actual background images if they exist
   local backgrounds = {'palace', 'forest', 'demonCastle', 'ruins'}
   for _, bg in ipairs(backgrounds) do
-      local success, image = pcall(love.graphics.newImage, 'assets/' .. bg .. '.png')
-      if success then
+      local image = loadImage('assets/' .. bg .. '.png')
+      if image then
           resources.images[bg] = image
           print("[RESOURCE] Loaded background image: assets/" .. bg .. '.png')
       end
@@ -1293,8 +1312,50 @@ print("[GAME] Battle state initialized")
   print("[GAME] Background images loaded")
   print("[GAME] love.load() - Game loading complete")
 
-  -- Initialize story text
-  initText()
+  -- Check for critical resources
+  local criticalResources = {
+    resources.images.background,
+    resources.images.dialogBox,
+    resources.images.uiFrame,
+    resources.images.playerStand,
+    resources.images.playerAttack,
+    resources.images.battleBgForest,
+    resources.images.battleBgCave,
+    resources.images.battleBgDungeon,
+    resources.images.battleBgCastle,
+    resources.images.hitEffect,
+    resources.images.defendEffect,
+    resources.images.skillDefend,
+    resources.images.skillSpecial,
+    resources.images.skillHeal,
+    resources.images.cooldownOverlay,
+    resources.images.portraitHero,
+    resources.images.portraitKing,
+    resources.images.portraitPrincess,
+    resources.images.portraitDemonKing,
+    resources.images.enemyDemonKing,
+    resources.fonts.ui,
+    resources.fonts.battle,
+    resources.fonts.damage,
+  }
+
+  local allCriticalResourcesLoaded = true
+  for _, resource in ipairs(criticalResources) do
+    if not resource then
+      print("[CRITICAL ERROR] A critical resource failed to load. The game cannot continue.")
+      allCriticalResourcesLoaded = false
+      break
+    end
+  end
+
+  if not allCriticalResourcesLoaded then
+    -- Display an error message on screen
+    love.graphics.clear(0, 0, 0)
+    love.graphics.setColor(1, 0, 0)
+    love.graphics.setFont(resources.fonts.battle)
+    love.graphics.print("Critical resources failed to load.\nPlease check the console for details.", 100, 100)
+    love.event.quit() -- Terminate the game
+  end
 end
 
 -- Add timer utility functions
@@ -2246,7 +2307,7 @@ function handleBattleInput()
       battleState.currentOption = 1
     end
     if battleState.currentOption ~= prevBattleOption then
-      print("[BATTLE MENU] Navigated menu: " .. (love.keyboard.isDown("up") or love.keyboard.isDown("w") and "Up" or "Down") .. ", selected option index: " .. battleState.currentOption .. ", option name: " .. getText(currentGameLanguage, "battle_action_" .. battleState.options[battleState.currentOption].name:lower()))
+      print("[BATTLE MENU] Option selected: " .. battleState.currentOption)
     end
   end
 end
@@ -2928,6 +2989,9 @@ local function calculateDamage(attacker, defender)
   if player.isCheatMode then
     damage = defender.hp -- Set damage to enemy's current HP, effectively OHKO
   end
+
+  -- Assertion to ensure damage is non-negative
+  assert(damage >= 0, "Damage should not be negative")
 
  return damage, isCrit
 end
@@ -3642,3 +3706,98 @@ function drawOptionsUI()
   love.graphics.rectangle("line", backButtonRect.x, backButtonRect.y, backButtonRect.width, backButtonRect.height)
   love.graphics.print("<", backButtonRect.x + 15, backButtonRect.y + 15) -- Simple "<" as back arrow
 end
+
+-- 遊戲常量定義
+GAME_CONSTANTS = {
+    -- 傷害計算相關
+    MIN_DAMAGE = 1,
+    MAX_DAMAGE_MULTIPLIER = 3.0,
+    DAMAGE_RANDOM_MIN = -0.1,
+    DAMAGE_RANDOM_MAX = 0.1,
+    DEFENSE_SCALING = 100, -- 防禦力縮放係數
+    
+    -- 暴擊相關
+    BASE_CRIT_RATE = 5,
+    MAX_CRIT_RATE = 100,
+    BASE_CRIT_DAMAGE = 1.5,
+    MAX_CRIT_DAMAGE = 3.0,
+    
+    -- 技能冷卻時間
+    COOLDOWN = {
+        ATTACK = 0,
+        DEFEND = 2,
+        SPECIAL = 3,
+        HEAL = 4
+    },
+    
+    -- 生命值相關
+    BASE_HP = 100,
+    MAX_HP_MULTIPLIER = 2.0,
+    HEAL_PERCENT = 0.2, -- 治療技能恢復最大生命值的百分比
+}
+
+-- 數值驗證工具函數
+function validateNumber(value, min, max, default)
+    if type(value) ~= "number" or value ~= value then -- Check for NaN
+        return default
+    end
+    return math.max(min, math.min(max, value))
+end
+
+-- 修改傷害計算函數
+function calculateDamage(attacker, defender)
+    -- 驗證攻擊者和防禦者的屬性
+    local attack = validateNumber(attacker.attack, 1, 9999, GAME_CONSTANTS.MIN_DAMAGE)
+    local defense = validateNumber(defender.defense, 0, 9999, 0)
+    
+    -- 基礎傷害計算
+    local baseDamage = attack * (GAME_CONSTANTS.DEFENSE_SCALING / (GAME_CONSTANTS.DEFENSE_SCALING + defense))
+    
+    -- 隨機波動
+    local randomMod = 1 + math.random(
+        GAME_CONSTANTS.DAMAGE_RANDOM_MIN * 100,
+        GAME_CONSTANTS.DAMAGE_RANDOM_MAX * 100
+    ) / 100
+    
+    local damage = baseDamage * randomMod
+    
+    -- 暴擊判定
+    local critRate = validateNumber(attacker.critRate, 0, GAME_CONSTANTS.MAX_CRIT_RATE, GAME_CONSTANTS.BASE_CRIT_RATE)
+    local isCrit = math.random(1, 100) <= critRate
+    
+    if isCrit then
+        local critDmg = validateNumber(attacker.critDamage, 1, GAME_CONSTANTS.MAX_CRIT_DAMAGE, GAME_CONSTANTS.BASE_CRIT_DAMAGE)
+        damage = damage * critDmg
+    end
+    
+    -- 最終傷害範圍驗證
+    damage = validateNumber(
+        math.floor(damage),
+        GAME_CONSTANTS.MIN_DAMAGE,
+        attack * GAME_CONSTANTS.MAX_DAMAGE_MULTIPLIER,
+        GAME_CONSTANTS.MIN_DAMAGE
+    )
+    
+    return damage, isCrit
+end
+
+-- 修改技能系統
+skillSystem = {
+    attack = { cooldown = 0, maxCooldown = GAME_CONSTANTS.COOLDOWN.ATTACK },
+    defend = { cooldown = 0, maxCooldown = GAME_CONSTANTS.COOLDOWN.DEFEND },
+    special = { cooldown = 0, maxCooldown = GAME_CONSTANTS.COOLDOWN.SPECIAL },
+    heal = { cooldown = 0, maxCooldown = GAME_CONSTANTS.COOLDOWN.HEAL }
+}
+
+-- 修改治療計算函數
+function calculateHeal(unit)
+    local baseHeal = unit.maxHp * GAME_CONSTANTS.HEAL_PERCENT
+    local healAmount = validateNumber(
+        math.floor(baseHeal),
+        1,
+        unit.maxHp - unit.hp,
+        1
+    )
+    return healAmount
+end
+
