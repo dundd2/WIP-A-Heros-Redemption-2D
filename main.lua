@@ -99,32 +99,8 @@ local story = {
           story_page_back_button = "Back to Menu", -- 故事頁返回按鈕
           game_full_story = [[
 
-A month ago, the Demon King led his army to conquer cities and seize territories, abducting the king's princess and threatening the king to either cede land or abdicate the throne.
-
-One day, a brave hero happened upon an urgent notice issued by the king:
-
-"The Demon King, after conquering the city, infiltrated the palace one night, kidnapped the princess, and imprisoned her in his dungeon. The king implores capable heroes and righteous individuals to venture into the dungeon and rescue the princess. He promises that the one who succeeds will not only marry the princess but also receive countless gold and silver treasures. However, numerous adventurers have already attempted the challenge, yet none have returned alive."
-
-Upon learning of this, the brave hero decisively volunteered his services, determined to embark on the perilous journey to rescue the princess from the dungeon.
-
-After entering the dungeon, the hero discovered the entrance was sealed by powerful magic, making it impossible to return. Left with no other choice, he had to press forward. 
-On the first level, the hero vanquished all the monsters that stood in his way, advancing all the way to the third level.
-
-However, he suddenly encountered the Demon King! The Demon King himself had appeared and dispatched his personal guards to intercept him. Just as the hero engaged in battle, in the heat of the fight, he realized it was a trap. But the Demon King seized the opportunity to launch a sneak attack, catching him off guard and knocking him unconscious.
-
-When the hero awoke, he found himself confined to a prison cell.
-
-He was awakened by a bandit in the adjacent cell. The bandit told him that he had infiltrated the dungeon not to rescue the princess, but to seek legendary treasures, but was ultimately defeated by the guards and imprisoned. At this moment, the hero was shocked to realize that his equipment had been stolen by the Demon King,
-, and he had even lost a significant portion of his stats due to the trap.
-
-The bandit revealed that this dungeon not only held countless treasures but also contained secret potion, elixirs and items that could enhance one's abilities—the very reason why the Demon King had become so powerful. The bandit also informed the hero that he had already dug a secret passage to escape the prison cell and then left on his own.
-
-After escaping the prison cell, the hero began a treacherous journey.
-
-Within the dungeon, he encountered all sorts of NPCs, some offering assistance, while others had ulterior motives. After enduring countless challenges and strengthening his own abilities, he finally reached the deepest part of the dungeon, where he faced the ultimate enemy—the Demon King.
-
-In the end, the hero successfully defeated the Demon King, broke the seal, and rescued the princess.
-Returning to the surface with the princess, the hero was met with a warm welcome from the king and the people. Keeping his promise, the king gave the princess's hand in marriage to the hero and rewarded him with immense gold and silver treasures. Amidst the joy and congratulations, the hero achieved his own happy ending.
+A month ago, the Demon King led his army to 
+In the end, the hero successfully defeated the Demon King,
 ]],
       },
       zh = {
@@ -223,38 +199,8 @@ Returning to the surface with the princess, the hero was met with a warm welcome
           game_full_story = [[
 一個月前，魔王率領他的軍隊征服城池、奪取領土，並綁架國王的公主，威脅國王要么割讓土地，要么退位讓賢。  
 
-某日，一位勇敢的英雄偶然發現了一則國王發布的緊急告示：  
-
->「魔王在攻陷城池後，某夜潛入皇宮，綁架了公主，並將她囚禁在他的地牢之中。國王懇求天下有志之士與正義之人勇闖地牢，拯救公主。他承諾，成功者不僅可迎娶公主，還將獲得無數金銀財寶。然而，已有無數冒險者前去挑戰，卻無一人生還。」  
-
-得知此事後，這位英雄當機立斷，自願挺身而出，決心踏上這條危險重重的道路，誓要從魔王的地牢中救出公主。  
-
-進入地牢  
-
-當英雄踏入地牢後，他發現入口已被強大的魔法封印，使他無法回頭，只能硬著頭皮向前。  
-在第一層，他擊敗了所有擋路的怪物，一路挺進至第三層。  
-
-然而，他突然遭遇魔王！魔王親自現身，派遣親衛軍圍剿他。當英雄奮戰之際，漸漸察覺這是一場陷阱——但就在他意識到危險的瞬間，魔王趁其不備發動偷襲，令他措手不及，最終被擊昏過去。  
-
-囚禁與覺醒  
-
-當英雄醒來時，他發現自己被囚禁在牢房中。  
-
-喚醒他的是隔壁牢房的一名盜賊。盜購告訴他，自己潛入地牢並非為了拯救公主，而是為了尋找傳說中的寶藏，結果被守衛打敗，落得同樣的下場。此時，英雄震驚地發現自己的裝備已被魔王奪走，甚至因為陷阱的影響，他的能力也被大幅削弱。  
-
-盜賊透露，這座地牢內不僅藏有無數珍寶，還蘊藏著能夠強化能力的秘藥與道具，這正是魔王強大的真正原因。隨後，盜賊悄悄告知英雄，他已經挖通了一條密道，準備逃出牢房，然後便獨自離去。  
-
-崎嶇的旅程  
-
-成功逃出牢房後，英雄開始了艱難的旅程。  
-
-在地牢內，他遇見了形形色色的 NPC——有些提供幫助，有些則心懷鬼胎。在歷經無數挑戰、強化自身能力後，他終於抵達了地牢的最深處，面對最終的宿敵——魔王。  
-
-終章  
-
 最終，英雄憑藉自身的智慧與實力擊敗了魔王，打破封印，成功救出了公主。  
 
-當他帶著公主重返地面時，國王與人民為之歡欣鼓舞。國王信守承諾，將公主許配給英雄，並賜予他無數金銀財寶。在一片歡樂與祝賀聲中，英雄迎來了屬於自己的美好結局。
 ]],
       },
   },
@@ -1345,7 +1291,6 @@ print("[GAME] Battle state initialized")
       print("[CRITICAL ERROR] A critical resource failed to load. The game cannot continue.")
       allCriticalResourcesLoaded = false
       break
-    end
   end
 
   if not allCriticalResourcesLoaded then
@@ -1358,24 +1303,132 @@ print("[GAME] Battle state initialized")
   end
 end
 
--- Add timer utility functions
-function addTimer(duration, callback)
-table.insert(timers, {
-  duration = duration,
-  remaining = duration,
-  callback = callback
-})
+-- Timer system improvements
+local TimerSystem = {
+    timers = {},
+    nextId = 1
+}
+
+-- Timer states
+local TIMER_STATE = {
+    ACTIVE = "active",
+    PAUSED = "paused",
+    CANCELLED = "cancelled"
+}
+
+-- Timer groups
+local TIMER_GROUPS = {
+    BATTLE = "battle",
+    ANIMATION = "animation",
+    UI = "ui"
+}
+
+function TimerSystem.create(duration, callback, group)
+    local id = TimerSystem.nextId
+    TimerSystem.nextId = TimerSystem.nextId + 1
+    
+    TimerSystem.timers[id] = {
+        duration = duration,
+        remaining = duration,
+        callback = callback,
+        state = TIMER_STATE.ACTIVE,
+        group = group or "default"
+    }
+    
+    return id
+end
+
+function TimerSystem.cancel(id)
+    local timer = TimerSystem.timers[id]
+    if timer then
+        timer.state = TIMER_STATE.CANCELLED
+    end
+end
+
+function TimerSystem.pause(id)
+    local timer = TimerSystem.timers[id]
+    if timer and timer.state == TIMER_STATE.ACTIVE then
+        timer.state = TIMER_STATE.PAUSED
+    end
+end
+
+function TimerSystem.resume(id)
+    local timer = TimerSystem.timers[id]
+    if timer and timer.state == TIMER_STATE.PAUSED then
+        timer.state = TIMER_STATE.ACTIVE
+    end
+end
+
+function TimerSystem.pauseGroup(group)
+    for id, timer in pairs(TimerSystem.timers) do
+        if timer.group == group and timer.state == TIMER_STATE.ACTIVE then
+            timer.state = TIMER_STATE.PAUSED
+        end
+    end
+end
+
+function TimerSystem.resumeGroup(group)
+    for id, timer in pairs(TimerSystem.timers) do
+        if timer.group == group and timer.state == TIMER_STATE.PAUSED then
+            timer.state = TIMER_STATE.ACTIVE
+        end
+    end
+end
+
+function TimerSystem.update(dt)
+    for id, timer in pairs(TimerSystem.timers) do
+        if timer.state == TIMER_STATE.ACTIVE then
+            timer.remaining = timer.remaining - dt
+            if timer.remaining <= 0 then
+                if timer.callback then
+                    timer.callback()
+                end
+                TimerSystem.timers[id] = nil
+            end
+        end
+    end
+end
+
+-- Replace existing timer related functions
+function addTimer(duration, callback, group)
+    return TimerSystem.create(duration, callback, group)
 end
 
 function updateTimers(dt)
-for i = #timers, 1, -1 do
-  local timer = timers[i]
-  timer.remaining = timer.remaining - dt
-  if timer.remaining <= 0 then
-    timer.callback()
-    table.remove(timers, i)
-  end
+    TimerSystem.update(dt)
 end
+
+-- Example usage in startEnemyTurn
+function startEnemyTurn()
+    -- ...existing code...
+    
+    -- Use the new timer system with group
+    local timerId = addTimer(GAME_CONSTANTS.TIMER.ACTION_DELAY, function()
+        battleState.phase = "select"
+        battleState.turn = "player"
+    end, TIMER_GROUPS.BATTLE)
+    
+    -- Store timer ID if needed to cancel/pause later
+    battleState.currentTimerId = timerId
+end
+
+-- Add pause handling
+function handleBattlePause()
+    if not pauseState.isPaused then
+        pauseState.isPaused = true
+        gameState = "pause"
+        -- Pause all battle timers
+        TimerSystem.pauseGroup(TIMER_GROUPS.BATTLE)
+    end
+end
+
+function resumeBattle()
+    if pauseState.isPaused then
+        pauseState.isPaused = false
+        gameState = "battle"
+        -- Resume all battle timers
+        TimerSystem.resumeGroup(TIMER_GROUPS.BATTLE)
+    end
 end
 
 function love.update(dt)
@@ -2372,7 +2425,7 @@ function handleOptionsInput(dt)
       elseif currentOption.type == "resolution" then -- Resolution change
         currentOption.currentOption = currentOption.currentOption + 1
         if currentOption.currentOption > #currentOption.resolutionOptions then
-          currentOption.currentOption = #currentOption.resolutionOptions
+          currentOption.currentOption = 1
         end
          currentResolutionIndex = currentOption.currentOption
          applyResolutionChange() -- Apply resolution change
@@ -2472,6 +2525,127 @@ local inputMapping = {
   ["w"] = "move_up",
   ["s"] = "move_down"
 }
+
+local inputMappingByState = {
+    menu = {
+        ["return"] = function() handleMenuSelect() end,
+        ["escape"] = function() handleMenuBack() end,
+        ["up"] = function() handleMenuNavigation("up") end,
+        ["down"] = function() handleMenuNavigation("down") end,
+        ["w"] = function() handleMenuNavigation("up") end,
+        ["s"] = function() handleMenuNavigation("down") end
+    },
+    battle = {
+        ["return"] = function() handleBattleAction() end,
+        ["escape"] = function() handleBattlePause() end,
+        ["up"] = function() handleBattleNavigation("up") end,
+        ["down"] = function() handleBattleNavigation("down") end
+    },
+    storyPage = {
+        ["escape"] = function() handleStoryPageBack() end,
+        ["up"] = function() handleStoryPageScroll("up") end,
+        ["down"] = function() handleStoryPageScroll("down") end
+    }
+}
+
+-- Modify love.keypressed to use the new mapping system
+function love.keypressed(key)
+    local currentStateMappings = inputMappingByState[gameState]
+    if currentStateMappings then
+        local action = currentStateMappings[key]
+        if action then
+            action()
+        end
+    end
+end
+
+-- Add input handling functions
+function handleMenuSelect()
+    -- ...existing code from love.keypressed menu select handling...
+end
+
+function handleMenuBack()
+    -- ...existing code from love.keypressed menu back handling...
+end
+
+function handleMenuNavigation(direction)
+    local moved = false
+    local prevOption = menuState.currentOption
+    
+    if direction == "up" then
+        if menuState.currentOption > 1 then
+            menuState.currentOption = menuState.currentOption - 1
+            moved = true
+        end
+    elseif direction == "down" then
+        if menuState.currentOption < #menuState.options then
+            menuState.currentOption = menuState.currentOption + 1
+            moved = true
+        end
+    end
+    
+    if moved then
+        if not audioState.isMutedSFX then
+            resources.sounds.menuSelect:play()
+        end
+    end
+end
+
+function handleBattleAction()
+    if battleState.phase == "select" then
+        local selectedOption = battleState.options[battleState.currentOption]
+        if selectedOption.name == "Attack" then
+            performPlayerAttack()
+        elseif selectedOption.name == "Defend" then
+            performPlayerDefend()
+        elseif selectedOption.name == "Special" then
+            performPlayerSpecial()
+        elseif selectedOption.name == "Heal" then
+            performPlayerHeal()
+        end
+    end
+end
+
+function handleBattlePause()
+    if not pauseState.isPaused then
+        pauseState.isPaused = true
+        gameState = "pause"
+        -- Pause all battle timers
+        TimerSystem.pauseGroup(TIMER_GROUPS.BATTLE)
+    end
+end
+
+function resumeBattle()
+    if pauseState.isPaused then
+        pauseState.isPaused = false
+        gameState = "battle"
+        -- Resume all battle timers
+        TimerSystem.resumeGroup(TIMER_GROUPS.BATTLE)
+    end
+end
+
+function handleBattleNavigation(direction)
+    local moved = false
+    local prevOption = battleState.currentOption
+    
+    if direction == "up" then
+        if battleState.currentOption > 1 then
+            battleState.currentOption = battleState.currentOption - 1
+            moved = true
+        end
+    elseif direction == "down" then
+        if battleState.currentOption < #battleState.options then
+            battleState.currentOption = battleState.currentOption + 1
+            moved = true
+        end
+    end
+    
+    if moved then
+        if not audioState.isMutedSFX then
+            resources.sounds.menuSelect:play()
+        end
+    end
+end
 
 local function handleInputAction(action)
   -- 根據 action 進行對應邏輯，例如:
@@ -2705,6 +2879,76 @@ function handleOptionsInputReturn()
   end
 end
 
+
+-- Add this utility function for mouse collision detection
+local function isPointInRect(x, y, rect)
+    if not rect or not rect.x or not rect.y or not rect.width or not rect.height then
+        return false
+    end
+    return x >= rect.x and x <= rect.x + rect.width and
+           y >= rect.y and y <= rect.y + rect.height
+end
+
+-- Replace the existing love.mousepressed function
+function love.mousepressed(x, y, button, istouch, presses)
+    if button ~= 1 then return end -- Only handle left clicks
+    
+    local handled = false
+    
+    if gameState == "menu" then
+        if menuState.buttonAreas then
+            for i, area in ipairs(menuState.buttonAreas) do
+                if isPointInRect(x, y, area) then
+                    menuState.currentOption = i
+                    handleMenuSelect()
+                    handled = true
+                    break
+                end
+            end
+        end
+    elseif gameState == "battle" and not pauseState.isPaused then
+        if battleState.buttonAreas then
+            for i, area in ipairs(battleState.buttonAreas) do
+                if isPointInRect(x, y, area) and battleState.phase == "select" then
+                    battleState.currentOption = i
+                    handleBattleAction()
+                    handled = true
+                    break
+                end
+            end
+        end
+    elseif gameState == "pause" then
+        if pauseState.buttonAreas then
+            for i, area in ipairs(pauseState.buttonAreas) do
+                if isPointInRect(x, y, area) then
+                    pauseState.currentOption = i
+                    if i == 1 then
+                        resumeBattle()
+                    elseif i == 2 then
+                        gameState = "menu"
+                        TimerSystem.pauseGroup(TIMER_GROUPS.BATTLE)
+                    end
+                    handled = true
+                    break
+                end
+            end
+        end
+    elseif gameState == "storyPage" then
+        if storyPageState.backButtonArea and isPointInRect(x, y, storyPageState.backButtonArea) then
+            gameState = "menu"
+            handled = true
+        end
+    end
+
+    if handled and not audioState.isMutedSFX then
+        resources.sounds.menuSelect:play()
+    end
+end
+
+-- Add touch input support
+function love.touchpressed(id, x, y)
+    love.mousepressed(x, y, 1, true, 1)
+end
 
 function love.mousepressed(x, y, button, istouch, presses)
  if gameState == "menu" then
@@ -2998,80 +3242,90 @@ end
 
 -- Modify performPlayerAttack function
 function performPlayerAttack()
-  print("[BATTLE ACTION] Player action: Attack")
-  if skillSystem.attack.cooldown > 0 then
-    battleState.message = "Skill on cooldown!"
-    print("[BATTLE] Attack skill on cooldown")
-    return
-  end
+    -- Guard clause for cooldown
+    if skillSystem.attack.cooldown > 0 then
+        battleState.message = getText(currentGameLanguage, "battle_msg_skill_cooldown")
+        battleState.messageTimer = GAME_CONSTANTS.TIMER.MESSAGE_DURATION
+        return
+    end
 
-  if not audioState.isMutedSFX then
-    resources.sounds.attack:play()
-    print("[AUDIO] Played sound: attack")
-  end
+    if not audioState.isMutedSFX then
+        resources.sounds.attack:play()
+    end
 
-  animations.player.current = "attack"
-  local damage, isCrit = calculateDamage(player, enemy)
-  print("[BATTLE] Player stats before attack: HP=" .. player.hp .. ", Attack=" .. player.attack .. ", Defense=" .. player.defense .. ", CritRate=" .. player.critRate .. ", CritDamage=" .. player.critDamage)
-  print("[BATTLE] Enemy stats before attack: HP=" .. enemy.hp .. ", Attack=" .. enemy.attack .. ", Defense=" .. enemy.defense .. ", CritRate=" .. enemy.critRate .. ", CritDamage=" .. enemy.critDamage)
-  enemy.hp = math.max(0, enemy.hp - damage)
-  print("[BATTLE] Player dealt " .. damage .. " damage to enemy. Crit=" .. tostring(isCrit))
+    animations.player.current = "attack"
+    local damage, isCrit = calculateDamage(player, enemy)
+    enemy.hp = validateNumber(enemy.hp - damage, 0, enemy.maxHp, 0)
 
-  -- Create new particle system instance for hit effect
-  local hitParticleSystem = love.graphics.newParticleSystem(resources.images.hitEffect, 100)
-  hitParticleSystem:setParticleLifetime(0.2, 0.5)
-  hitParticleSystem:setSpeed(100, 200)
-  hitParticleSystem:setDirection(0, 360)
-  hitParticleSystem:setSpread(5)
-  hitParticleSystem:setSizes(0.3, 0.1)
-  hitParticleSystem:setRotation(0, 360)
-  hitParticleSystem:emit(100)
+    -- Create battle effect with new timer system
+    local effectId = TimerSystem.create(GAME_CONSTANTS.TIMER.EFFECT_DURATION, function()
+        table.remove(battleState.effects, 1)
+    end, TIMER_GROUPS.ANIMATION)
 
-  table.insert(battleState.effects, {
-    type = "hit",
-    x = positions.enemy.x + 50,
-    y = positions.enemy.y + 50,
-    particleSystem = hitParticleSystem,
-    timer = 0.5
-  })
-
-  -- Add damage number effect
-  local damageText = tostring(damage)
-  if isCrit then
-      damageText = damageText .. "!"
-      if not audioState.isMutedSFX then
-        love.audio.play(resources.sounds.crit)
-        print("[AUDIO] Played sound: crit")
-      end
-  end
-  table.insert(battleState.effects, {
-      type = "damage",
-      amount = damageText,
-      x = positions.enemy.x + 50,
-      y = positions.enemy.y,
-      timer = 1
+    -- Add hit effect
+    table.insert(battleState.effects, {
+        type = "hit",
+        x = positions.enemy.x + 50,
+        y = positions.enemy.y + 50,
+        timer = effectId
     })
 
-  battleState.message = getText(currentGameLanguage, "battle_msg_player_attack", {damage = damage})
-  if isCrit then
-     battleState.message = getText(currentGameLanguage, "battle_msg_player_crit", {damage = damage})
-   end
-  battleState.messageTimer = 2
-  battleState.phase = "action"
-  print("[BATTLE STATE] Battle phase changed to 'action'")
+    -- Set battle message
+    battleState.message = isCrit and 
+        getText(currentGameLanguage, "battle_msg_player_attack_crit", {damage = damage}) or
+        getText(currentGameLanguage, "battle_msg_player_attack", {damage = damage})
+    battleState.messageTimer = GAME_CONSTANTS.TIMER.MESSAGE_DURATION
+    battleState.phase = "action"
 
-  -- Check for victory
-  if enemy.hp <= 0 then
-    battleState.phase = "result"
-    print("[BATTLE STATE] Battle phase changed to 'result', enemy defeated")
-  else
-    -- Enemy turn after delay
-    addTimer(2, function() startEnemyTurn() end)
-    print("[TIMER] Added timer for enemy turn")
-  end
+    -- Check victory condition
+    if enemy.hp <= 0 then
+        battleState.phase = "result"
+        TimerSystem.create(GAME_CONSTANTS.TIMER.ACTION_DELAY, function()
+            gameState = "victory"
+        end, TIMER_GROUPS.BATTLE)
+    else
+        TimerSystem.create(GAME_CONSTANTS.TIMER.ACTION_DELAY, startEnemyTurn, TIMER_GROUPS.BATTLE)
+    end
 
-  skillSystem.attack.cooldown = skillSystem.attack.maxCooldown
-  print("[SKILL SYSTEM] Attack skill cooldown set to " .. skillSystem.attack.cooldown)
+    -- Apply cooldown
+    skillSystem.attack.cooldown = skillSystem.attack.maxCooldown
+end
+
+-- Modified performPlayerHeal to use improved systems
+function performPlayerHeal()
+    -- Guard clause for cooldown
+    if skillSystem.heal.cooldown > 0 then
+        battleState.message = getText(currentGameLanguage, "battle_msg_skill_cooldown")
+        battleState.messageTimer = GAME_CONSTANTS.TIMER.MESSAGE_DURATION
+        return
+    end
+
+    if not audioState.isMutedSFX then
+        resources.sounds.heal:play()
+    end
+
+    local healAmount = calculateHeal(player)
+    player.hp = validateNumber(player.hp + healAmount, 0, player.maxHp, player.hp)
+    
+    -- Create heal effect with new timer system
+    local effectId = TimerSystem.create(GAME_CONSTANTS.TIMER.EFFECT_DURATION, function()
+        table.remove(battleState.effects, 1)
+    end, TIMER_GROUPS.ANIMATION)
+
+    -- Add heal effect
+    table.insert(battleState.effects, {
+        type = "heal",
+        x = positions.player.x + 50,
+        y = positions.player.y + 50,
+        timer = effectId
+    })
+
+    battleState.message = getText(currentGameLanguage, "battle_msg_player_heal", {healAmount = healAmount})
+    battleState.messageTimer = GAME_CONSTANTS.TIMER.MESSAGE_DURATION
+    battleState.phase = "action"
+
+    TimerSystem.create(GAME_CONSTANTS.TIMER.ACTION_DELAY, startEnemyTurn, TIMER_GROUPS.BATTLE)
+    skillSystem.heal.cooldown = skillSystem.heal.maxCooldown
 end
 
 function performPlayerDefend()
@@ -3082,11 +3336,6 @@ end
 function performPlayerSpecial()
   -- No changes needed for special skill
   performPlayerSpecial_original() -- call original special function if you have any
-end
-
-function performPlayerHeal()
-  -- No changes needed for heal skill
-  performPlayerHeal_original() -- call original heal function if you have any
 end
 
 
@@ -3730,10 +3979,20 @@ GAME_CONSTANTS = {
         HEAL = 4
     },
     
-    -- 生命值相關
-    BASE_HP = 100,
-    MAX_HP_MULTIPLIER = 2.0,
-    HEAL_PERCENT = 0.2, -- 治療技能恢復最大生命值的百分比
+    -- HP related constants
+    HP = {
+        BASE = 100,
+        MIN = 1,
+        MAX = 9999,
+        HEAL_PERCENT = 0.2
+    },
+
+    -- Timer constants
+    TIMER = {
+        ACTION_DELAY = 2.0,
+        EFFECT_DURATION = 0.5,
+        MESSAGE_DURATION = 2.0
+    }
 }
 
 -- 數值驗證工具函數
@@ -3801,3 +4060,131 @@ function calculateHeal(unit)
     return healAmount
 end
 
+-- Add state validation functions
+local VALID_GAME_STATES = {
+    menu = true,
+    battle = true,
+    story = true,
+    pause = true,
+    victory = true,
+    defeat = true,
+    options = true,
+    storyPage = true,
+    levelSelect = true
+}
+
+local VALID_BATTLE_PHASES = {
+    select = true,
+    action = true,
+    result = true
+}
+
+local function validateGameState(state)
+    if not VALID_GAME_STATES[state] then
+        print("[ERROR] Invalid game state: " .. tostring(state))
+        return "menu" -- Default fallback
+    end
+    return state
+end
+
+local function validateBattlePhase(phase)
+    if not VALID_BATTLE_PHASES[phase] then
+        print("[ERROR] Invalid battle phase: " .. tostring(phase))
+        return "select" -- Default fallback
+    end
+    return phase
+end
+
+-- Add safe state transition function
+local function transitionGameState(from, to)
+    if not VALID_GAME_STATES[from] or not VALID_GAME_STATES[to] then
+        print("[ERROR] Invalid state transition: " .. tostring(from) .. " -> " .. tostring(to))
+        return false
+    end
+
+    -- Special handling for battle state transitions
+    if to == "battle" then
+        -- Reset battle state
+        battleState.phase = validateBattlePhase("select")
+        battleState.turn = "player"
+        battleState.message = getText(currentGameLanguage, "battle_start")
+        battleState.messageTimer = GAME_CONSTANTS.TIMER.MESSAGE_DURATION
+    elseif from == "battle" then
+        -- Clean up battle timers
+        TimerSystem.pauseGroup(TIMER_GROUPS.BATTLE)
+    end
+
+    gameState = to
+    return true
+end
+
+-- Modify startEnemyTurn to use state validation
+function startEnemyTurn()
+    if battleState.phase ~= "action" then
+        print("[ERROR] Invalid battle phase for enemy turn: " .. tostring(battleState.phase))
+        return
+    end
+
+    battleState.turn = "enemy"
+    battleState.phase = validateBattlePhase("action")
+
+    local enemyData = enemyData[menuState.levelSelect.currentLevel]
+    if not enemyData then
+        print("[ERROR] Missing enemy data for level: " .. tostring(menuState.levelSelect.currentLevel))
+        return
+    end
+
+    -- Continue with enemy turn logic using defensive programming
+    local aiType = enemyAI[enemyData.ai] or enemyAI.basic -- Fallback to basic AI if missing
+    local action = aiType.decideAction(enemy, player)
+
+    -- Safe timer creation with proper group
+    TimerSystem.create(GAME_CONSTANTS.TIMER.ACTION_DELAY, function()
+        if gameState == "battle" then -- Check if still in battle
+            battleState.phase = validateBattlePhase("select")
+            battleState.turn = "player"
+        end
+    end, TIMER_GROUPS.BATTLE)
+end
+
+-- Modify restartGame to use safe state transitions
+function restartGame()
+    -- Reset player with validated values
+    player.hp = validateNumber(player.maxHp, GAME_CONSTANTS.HP.MIN, GAME_CONSTANTS.HP.MAX, GAME_CONSTANTS.HP.BASE)
+    player.isDefending = false
+    player.combo = 0
+
+    -- Load enemy data safely
+    local currentEnemyData = enemyData[menuState.levelSelect.currentLevel]
+    if not currentEnemyData then
+        print("[ERROR] Failed to load enemy data for level: " .. tostring(menuState.levelSelect.currentLevel))
+        return
+    end
+
+    -- Initialize enemy with validated values
+    enemy = {
+        x = positions.enemy.x,
+        y = positions.enemy.y,
+        hp = validateNumber(currentEnemyData.hp, GAME_CONSTANTS.HP.MIN, GAME_CONSTANTS.HP.MAX, GAME_CONSTANTS.HP.BASE),
+        maxHp = validateNumber(currentEnemyData.maxHp, GAME_CONSTANTS.HP.MIN, GAME_CONSTANTS.HP.MAX, GAME_CONSTANTS.HP.BASE),
+        attack = validateNumber(currentEnemyData.attack, 1, math.huge, 10),
+        defense = validateNumber(currentEnemyData.defense, 0, math.huge, 5),
+        isDefending = false,
+        status = {},
+        combo = 0
+    }
+
+    -- Safely transition to battle state
+    transitionGameState(gameState, "battle")
+    pauseState.isPaused = false
+
+    -- Handle audio transition safely
+    if not audioState.isMutedBGM then
+        if resources.sounds.menuBgm then resources.sounds.menuBgm:stop() end
+        if resources.sounds.battleBgm then
+            resources.sounds.battleBgm:setLooping(true)
+            resources.sounds.battleBgm:play()
+        end
+    end
+end
+end
